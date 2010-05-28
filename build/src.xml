@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<src>
+	<project>
+		<src dest="../" type="git" 
+		uri="git://github.com/denuno/shentegration.git" 
+		user="guest" password="guess" />
+	</project>
+	<sources>
+		<src dest="./" type="svn" 
+		uri="http://mxunit.googlecode.com/svn/mxunit/trunk"
+		dirname="mxunit" 
+		user="" password="" />
+
+<!-- 
+		<src dest="./" type="svn" 
+		uri="http://svn.model-glue.com/trunk/ModelGlue/" 
+		dirname="ModelGlue" 
+		user="" password="" />
+ -->
+		
+		
+				
+	</sources>
+</src>
