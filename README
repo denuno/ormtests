@@ -11,5 +11,11 @@ If stuff breaks half-way through downloading something, delete:
 
   ./build/cfdistro/ext/
  
+ And try it again.  Resources are only downloaded if they don't exist.
+ 
+ To stop it, in the build dir type:
+ 
+  ant build.localdev.stop
+
 
  Force be with you.
