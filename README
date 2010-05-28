@@ -1,1 +1,15 @@
 A test project for doing ORM tests redundantly named
+
+go to build dir and type:
+
+  ant build.localdev.start.launch
+
+and if you are lucky a bunch of crap will happen including a browser launch at 
+the end to show you den test run.
+
+If stuff breaks half-way through downloading something, delete:
+
+  ./build/cfdistro/ext/
+ 
+
+ Force be with you.
