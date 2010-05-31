@@ -1,14 +1,16 @@
 <cfdirectory directory="#expandPath("/tests/cfml/ormtests")#" action="list" name="dirlist"> 
 <h2>
-	Examples
+	ORM - <cfoutput><em>Engine: #server.coldfusion.productname# - Version: #server.coldfusion.productversion#</em></cfoutput>
 </h2>
 <cfset h2util = createObject("component","ormtests.H2Util").init(cfadminpassword="testtest") />
 <cfloop query="dirlist">
 	<cfif type eq "Dir" and name neq "hbm">
 		<cfoutput>
+			Tests in : 
 			<a href="tests/cfml/ormtests/#name#/">
 				#name#
-			</a>
+			</a> | 
+			<a href="http://github.com/denuno/ormtests/tree/master/tests/cfml/ormtests/#name#/" target="_blank">View on GitHub</a>
 			<br />
 		</cfoutput>
 		<cfhttp method="get" url="http://#cgi.HTTP_HOST##getContextRoot()#/tests/cfml/ormtests/#name#/index.cfm">
