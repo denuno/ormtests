@@ -11,7 +11,7 @@
 		<!-- properties -->
 		<property name="show_sql">true</property>
 		<!-- mapping files -->
-		<mapping resource="/tests/cfml/ormtests/ormconfig/user.hbm.xml" />
+		<mapping resource="user.hbm.xml" />
 
 	</session-factory>
 
