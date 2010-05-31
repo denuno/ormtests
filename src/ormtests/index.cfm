@@ -1,4 +1,10 @@
+<cfparam name="URL.output" default="html">
+<cfparam name="url.quiet" default="false">
+<cfparam name="url.email" default="false">
+<cfparam name="url.recipients" default="valliantster@gmail.com">
+<cfparam name="url.from" default="valliantster@gmail.com">
 <cfdirectory directory="#expandPath("/tests/cfml/ormtests")#" action="list" name="dirlist"> 
+	<cfsavecontent variable="recenthtml">
 <h2>
 	ORM - <cfoutput><em>Engine: #server.coldfusion.productname# - Version: #server.coldfusion.productversion#</em></cfoutput>
 </h2>
@@ -24,3 +30,15 @@
  --->
 	</cfif>
 </cfloop>
+	</cfsavecontent>
+<cfif url.email>
+	<!--- change this 'from' email! --->
+	<cfmail from="#url.from#" to="#url.recipients#" subject="Test Results : #DateFormat(now(),'short')# @ #TimeFormat(now(),'short')#" type="html">
+		#recenthtml# 
+	</cfmail>
+</cfif>
+<cftry>
+	<cfdirectory action="create" directory="#expandPath("/tests/")#/results">
+	<cfcatch></cfcatch>
+</cftry>
+<cffile action="write" file="#expandPath("/tests/")#/results/#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hhmmss')#-results.html" output="#recenthtml#">

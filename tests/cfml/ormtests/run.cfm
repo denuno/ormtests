@@ -1,7 +1,8 @@
 <cfparam name="URL.output" default="html">
 <cfparam name="url.quiet" default="false">
 <cfparam name="url.email" default="false">
-<cfparam name="url.recipients" default="????@????.com">
+<cfparam name="url.recipients" default="valliantster@gmail.com">
+<cfparam name="url.from" default="valliantster@gmail.com">
 <cfset path = getBaseTemplatePath() />
 <cfset dirname = listLast(getDirectoryFromPath(path),"\/") />
 <cfset dir = expandPath("/tests/cfml/ormtests/#dirname#/") />
@@ -29,14 +30,3 @@
 <cfif NOT url.quiet>
 	<cfoutput>#recenthtml#</cfoutput>
 </cfif>
-<cfif url.email>
-	<!--- change this 'from' email! --->
-	<cfmail from="????@????.com" to="#url.recipients#" subject="Test Results : #DateFormat(now(),'short')# @ #TimeFormat(now(),'short')#" type="html">
-		#recenthtml# 
-	</cfmail>
-</cfif>
-<cftry>
-	<cfdirectory action="create" directory="#expandPath("/tests/")#/results">
-	<cfcatch></cfcatch>
-</cftry>
-<cffile action="write" file="#expandPath("/tests/")#/results/#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hhmmss')#-results.html" output="#recenthtml#">
