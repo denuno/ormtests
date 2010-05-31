@@ -1,4 +1,4 @@
-<cfcomponent displayname="TestSvn"  extends="mxunit.framework.TestCase">
+	<cfcomponent displayname="TestSvn"  extends="mxunit.framework.TestCase">
 
 	<cffunction name="setUp" returntype="void" access="public">
 	</cffunction>
@@ -14,31 +14,36 @@
 
 	<cffunction name="testSaveEntry">
 		<cfset var blogentry = createObject("component","Entry") />
+		<cfset blogentry.setTitle("test entry") />
+		<cfset blogentry.setContent("this is an awesome test like so complet-") />		
 		<cfset entitySave( blogentry ) />
 	</cffunction>
 
 	<cffunction name="testLoadEntry">
-		<cdfset testSaveEntry() />
-		<cfset blogentry = entityload("Entry",1,true) />
+		<cfset testSaveEntry() />
+		<cfset var blogentry = entityload("Entry",1,true) />
 	</cffunction>
 
 	<cffunction name="testLoadEntitiesToQuery">
-		<cdfset testSaveEntry() />
-		<cfset blogentry = entityload("Entry",1,true) />
+		<cfset testSaveEntry() />
+		<cfset var blogentry = entityload("Entry",1,true) />
 		<cfset blar = EntityToQuery(blogentry.getComments()) />
 	</cffunction>
 
 	<cffunction name="testLoadEntitiesMetadata">
-		<cfset blogentry = entityload("Entry",1,true) />
+		<cfset testSaveEntry() />
+		<cfset var blogentry = entityload("Entry",1,true) />
 		<cfset blar = getmetadata(blogentry.getComments()) />
 	</cffunction>
 
 	<cffunction name="testRelation">
-		<cfset blogentry = entityload("Entry",1,true) />
-		<cfdump var="#blogentry.getComments()#" />
+		<cfset testSaveEntry() />
+		<cfset var blogentry = entityload("Entry",1,true) />
+		<cfset assertIsArray(blogentry.getComments()) />
 	</cffunction>
 
 	<cffunction name="testDumpEntities">
+		<cfset testSaveEntry() />
 		<cfset var blogentry = entityload("Entry",1,true) />
 		<cfdump var="#entityload("Entry",1,true)#">
 		<cfdump var="#getmetadata(blogentry)#" />

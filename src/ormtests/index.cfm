@@ -35,7 +35,7 @@
 	</cfsavecontent>
 <cfif url.email>
 	<!--- change this 'from' email! --->
-	<cfmail from="#url.from#" to="#url.recipients#" subject="Test Results : #DateFormat(now(),'short')# @ #TimeFormat(now(),'short')#" type="html">
+	<cfmail from="#url.from#" to="#url.recipients#" subject="#server.coldfusion.productname# Test Results : #DateFormat(now(),'short')# @ #TimeFormat(now(),'short')#" type="html">
 		#recenthtml# 
 	</cfmail>
 </cfif>
