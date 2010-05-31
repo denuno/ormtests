@@ -40,6 +40,8 @@
 		<!--
 		<mapping physical="${basedir}/../../docs" virtual="/docs"/>
 		-->
+		<!-- set debugging -->
+		<property name="debugging.enabled" value="false" />
 		<mapping physical="${basedir}/../tests" virtual="/tests" />
 		<mapping physical="${basedir}/../pub" virtual="/pub" />
 		<mapping physical="${src.dir}/cfdistro/org" virtual="/org" />
@@ -50,8 +52,12 @@
 				<property name="dont.add.libs" value="true" />
 			</then>
 		</antcontrib:if>
+		<echo message="deleteing any existing hbmxml and db files" />
 		<delete>
-			<fileset dir="${tests.dir}/cfml/" includes="/*/db/**" />
+			<fileset dir="${tests.dir}/cfml/" includes="/**/db/*" />
+		</delete>
+		<delete>
+			<fileset dir="${tests.dir}/cfml/" includes="**/*.hbmxml" />
 		</delete>
 
 		<antcontrib:runtarget target="cfdistro.build.localdev" />

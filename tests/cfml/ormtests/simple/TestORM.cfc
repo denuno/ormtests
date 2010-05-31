@@ -15,7 +15,7 @@
 	<cffunction name="testAddUser">
 		<cfset var user = createObject("component","user") />
 		<cfset user.setFirstName( "Bob" ) />
-		<cfset user.setLastName( "R#randRange(1,777)##randRange(1,777)#" ) />
+		<cfset user.setLastName( "Krug" ) />
 		<cfset user.setEmailAddress("email@someplace.com") />
 		<cfset user.setPassword( "secret" ) />
 		<cfset entitySave( user ) />
@@ -23,8 +23,9 @@
 
 	<cffunction name="testAddLoadLoadUserFilter">
 		<cfscript>
+			testAddUser();
 			users = entityLoad( 'User', { lastName='Krug' } );
-			users = entityLoad( 'User', { lastName='Krug' }, 'id asc' );
+			users = entityLoad( 'User', { lastName='Krug' }, 'userid asc' );
 			assertIsArray(users);
 		</cfscript>
 	</cffunction>

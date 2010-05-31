@@ -1,6 +1,6 @@
-<cfcomponent persistent="true" table="tsubusers">
+<cfcomponent persistent="true" table="tsubusers"  entityname="subuser">
 
-	<cfproperty name="IDuser" fieldtype="id" generator="identity"  />
+	<cfproperty name="userid" fieldtype="id" generator="identity"  />
 	<cfproperty name="firstname" />
 	<cfproperty name="lastname" />
 	<cfproperty name="emailaddress" />

@@ -1,6 +1,6 @@
 <cfparam name="URL.output" default="html">
 <cfparam name="url.quiet" default="false">
-<cfparam name="url.email" default="false">
+<cfparam name="url.email" default="true">
 <cfparam name="url.recipients" default="valliantster@gmail.com">
 <cfparam name="url.from" default="valliantster@gmail.com">
 <cfdirectory directory="#expandPath("/tests/cfml/ormtests")#" action="list" name="dirlist"> 
@@ -13,7 +13,7 @@
 	<cfif type eq "Dir" and name neq "hbm">
 		<cfoutput>
 			Tests in : 
-			<a href="tests/cfml/ormtests/#name#/">
+			<a href="#getContextRoot()#/tests/cfml/ormtests/#name#/">
 				#name#
 			</a> | 
 			<a href="http://github.com/denuno/ormtests/tree/master/tests/cfml/ormtests/#name#/" target="_blank">View on GitHub</a>
@@ -23,6 +23,8 @@
 		</cfhttp>
 		<cfoutput>
 			#cfhttp.FileContent#
+			<br />
+			<hr style="height:8px;"/> 
 		</cfoutput>
 <!--- 
 		<cfset wee = createObject("java","java.lang.Thread").sleep(500) />
@@ -42,3 +44,6 @@
 	<cfcatch></cfcatch>
 </cftry>
 <cffile action="write" file="#expandPath("/tests/")#/results/#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hhmmss')#-results.html" output="#recenthtml#">
+<cfif NOT url.quiet>
+	<cfoutput>#recenthtml#</cfoutput>
+</cfif>

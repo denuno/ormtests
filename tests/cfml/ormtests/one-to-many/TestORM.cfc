@@ -12,11 +12,18 @@
 		<cfabort />
 	</cffunction>
 
-	<cffunction name="testLoadEntities">
+	<cffunction name="testSaveEntry">
+		<cfset var blogentry = createObject("component","Entry") />
+		<cfset entitySave( blogentry ) />
+	</cffunction>
+
+	<cffunction name="testLoadEntry">
+		<cdfset testSaveEntry() />
 		<cfset blogentry = entityload("Entry",1,true) />
 	</cffunction>
 
 	<cffunction name="testLoadEntitiesToQuery">
+		<cdfset testSaveEntry() />
 		<cfset blogentry = entityload("Entry",1,true) />
 		<cfset blar = EntityToQuery(blogentry.getComments()) />
 	</cffunction>
@@ -26,13 +33,14 @@
 		<cfset blar = getmetadata(blogentry.getComments()) />
 	</cffunction>
 
-	<cffunction name="testDumpEntities">
+	<cffunction name="testRelation">
 		<cfset blogentry = entityload("Entry",1,true) />
 		<cfdump var="#blogentry.getComments()#" />
 	</cffunction>
 
 	<cffunction name="testDumpEntities">
-		<cfset blogentry = entityload("Entry",1,true) />
+		<cfset var blogentry = entityload("Entry",1,true) />
+		<cfdump var="#entityload("Entry",1,true)#">
 		<cfdump var="#getmetadata(blogentry)#" />
 		<cfdump var="#EntityToQuery(blogentry.getComments())#" />
 	</cffunction>
