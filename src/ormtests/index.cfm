@@ -3,10 +3,18 @@
 <cfparam name="url.email" default="true">
 <cfparam name="url.recipients" default="valliantster@gmail.com">
 <cfparam name="url.from" default="valliantster@gmail.com">
+<cfif structKeyExists(server,"railo")>
+	<cfset version = server.railo.version />
+	<cfset ticketsUrl = '<a href="https://jira.jboss.org/browse/RAILO/fixforversion/12314969">Jira</a>'>
+<cfelse>
+	<cfset version = server.coldfusion.productversion />
+	<cfset ticketsUrl = "">
+</cfif>
+
 <cfdirectory directory="#expandPath("/tests/cfml/ormtests")#" action="list" name="dirlist"> 
 	<cfsavecontent variable="recenthtml">
 <h2>
-	ORM - <cfoutput><em>Engine: #server.coldfusion.productname# - Version: #server.coldfusion.productversion#</em></cfoutput>
+	ORM - <cfoutput><em>Engine: #server.coldfusion.productname# - Version: #version# #ticketsUrl#</em></cfoutput>
 </h2>
 <cfset h2util = createObject("component","ormtests.H2Util").init(cfadminpassword="testtest") />
 <cfloop query="dirlist">

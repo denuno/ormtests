@@ -3,9 +3,9 @@
 
 	<property name="distro.name" value="ormtests" />
 
-	<property name="default.cfengine" value="acf" />
-	<!--
 	<property name="default.cfengine" value="railo" />
+	<!--
+	<property name="default.cfengine" value="acf" />
 	-->
 
 	<property name="src.dir" location="../src" />
