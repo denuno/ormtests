@@ -28,7 +28,6 @@
 			<cfdump var="#DTS.getCatastrophicErrors()#" expand="false" label="#StructCount(DTS.getCatastrophicErrors())# Catastrophic Errors" />
 		</cfif>
 		#results.getResultsOutput(URL.output)#
-		<hr/> 
 	</cfsavecontent>
 </cfoutput>
 <cfif NOT url.quiet>

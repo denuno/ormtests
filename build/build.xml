@@ -53,11 +53,12 @@
 			</then>
 		</antcontrib:if>
 		<echo message="deleteing any existing hbmxml and db files" />
-		<delete>
-			<fileset dir="${tests.dir}/cfml/" includes="/**/db/*" />
+		<delete includeemptydirs="true">
+			<fileset dir="${tests.dir}/cfml/" includes="**/db/**" />
 		</delete>
 		<delete>
 			<fileset dir="${tests.dir}/cfml/" includes="**/*.hbmxml" />
+			<fileset dir="${tests.dir}/cfml/" includes="**/*.cfc.hbm.xml" />
 		</delete>
 
 		<antcontrib:runtarget target="cfdistro.build.localdev" />

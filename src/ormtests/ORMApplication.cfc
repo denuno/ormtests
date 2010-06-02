@@ -20,6 +20,15 @@
 
 	<cfset this.name = "#dirname#test" />
 	<cfset server.enableORM = "dinfao" />
+	<cfset this.sessionManagement = true />
+
+	<cffunction name="onSessionStart">
+	</cffunction>
+	
+	<cffunction name="onApplicationStart">
+		<cfset session.fart = "silent" />
+	</cffunction>
+
 	<cfset this.ormEnabled = true />
 	<cfset this.datasource = dirname />
 	<cfif dirname neq "pub">
