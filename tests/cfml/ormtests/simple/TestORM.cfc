@@ -41,5 +41,14 @@
 		<cfset assertTrue(arrayLen(users)) />
 	</cffunction>
 
+	<cffunction name="testLoadAddUser">
+		<cfset var user = entityNew("user") />
+		<cfset user.setFirstName( "Bobby" ) />
+		<cfset user.setLastName( "Krugger" ) />
+		<cfset user.setEmailAddress("emails@someplace.com") />
+		<cfset user.setPassword( "secret" ) />
+		<cfset entitySave( user ) />
+	</cffunction>
+
 
 </cfcomponent>
