@@ -8,40 +8,52 @@
 		</fileset>
 	</path>
 
+	<macrodef name="javaSlashes">
+		<attribute name="property" />
+		<attribute name="input" />
+		<sequential>
+			<antcontrib:propertyregex property="@{property}" input="@{input}" regexp="[\\|/]" replace="/" global="true"  override="yes" />
+		</sequential>
+	</macrodef>
+
 	<macrodef name="requires-ext-file">
 		<attribute name="file" />
 		<sequential>
-			<antcontrib:propertyregex override="yes" property="extfile" input="@{file}" regexp=".*/ext/(.*)" select="\1" />
-			<antcontrib:propertyregex override="yes" property="extdir" input="@{file}" regexp=".*/ext/(.+)/([^/]+)$" select="\1" />
+			<javaSlashes property="extfile" input="@{file}" />
+			<echo message="getting ${extfile}" />
+			<antcontrib:propertyregex override="yes" property="extdir" input="${extfile}" regexp=".*/ext/(.+)/([^/]+)$" select="\1" />
+			<antcontrib:propertyregex override="yes" property="extfile" input="${extfile}" regexp=".*/ext/(.*)" select="\1" />
 			<antcontrib:if>
 				<available file="${ext.dir}/${extfile}" />
-				<then/>
+				<then />
 				<else>
 					<echo message="getting ${extfile}" />
-					<mkdir dir="${ext.dir}/${extdir}"/>
+					<mkdir dir="${ext.dir}/${extdir}" />
 					<get src="${ext.uri}/${extfile}" dest="${ext.dir}/${extfile}" verbose="true" ignoreerrors="false" />
 				</else>
-			</antcontrib:if>		
+			</antcontrib:if>
 		</sequential>
 	</macrodef>
 
 	<import file="scm.xml" />
+
 	<macrodef name="requires-ext">
 		<attribute name="resource" />
 		<sequential>
-			<antcontrib:propertyregex override="yes" property="extfile" input="@{resource}" regexp=".*/ext/(.*)" select="\1" />
+			<javaSlashes property="fixedSlashes" input="@{resource}" />
+			<antcontrib:propertyregex override="yes" property="extfile" input="${fixedSlashes}" regexp=".*/ext/(.*)" select="\1" />
 			<antcontrib:if>
 				<available file="${ext.dir}/${extfile}" />
-				<then/>
+				<then />
 				<else>
 					<echo message="getting ${extfile}" />
 					<svn-export dest="${ext.dir}/${extfile}" uri="${ext.uri}/${extfile}" />
 				</else>
-			</antcontrib:if>		
+			</antcontrib:if>
 		</sequential>
 	</macrodef>
-	
-	
+
+
 	<taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml" classpath="${cfdistro.basedir}/lib/ant-contrib.jar" />
 
 	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpath="${cfdistro.basedir}/lib/xmltask-v1.16.1.jar" />
@@ -82,14 +94,15 @@
 	<property name="jetty-runner.jar" value="jetty-runner-7.1.0.v20100505.jar" />
 
 	<property name="ext.uri" value="http://subversion.assembla.com/svn/cfdistro/trunk/cfdistro/ext" />
-	
-	<requires-ext resource="${ext.dir}/dtd/web-app_2_3.dtd"/>
-	<requires-ext resource="${ext.dir}/dtd/urlrewrite3.2.dtd"/>
+
+	<requires-ext resource="${ext.dir}/dtd/web-app_2_3.dtd" />
+	<requires-ext resource="${ext.dir}/dtd/urlrewrite3.2.dtd" />
 	<xmlcatalog id="commonDTDs">
 		<dtd publicId="-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" location="${ext.dir}/dtd/web-app_2_3.dtd" />
 		<dtd publicId="-//tuckey.org//DTD UrlRewrite 3.2//EN" location="${ext.dir}/dtd/urlrewrite3.2.dtd" />
 	</xmlcatalog>
-	
+	<javaSlashes property="ext.dir" input="${ext.dir}" />
+
 	<import file="build-railo.xml" />
 	<import file="build-acf.xml" />
 	<import file="build-obd.xml" />
@@ -249,21 +262,20 @@
 
 	<macrodef name="load-src-xml">
 		<sequential>
-		    <loadfile
-		      property="src.xml"
-		      srcFile="src.xml">
+			<antcontrib:runtarget target="check.creds" />
+			<loadfile property="src.xml" srcFile="src.xml">
 				<filterchain>
 					<filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
 						<param type="propertiesfile" value="creds.txt" />
 					</filterreader>
 				</filterchain>
-		    </loadfile>
+			</loadfile>
 			<xmltask destbuffer="src.buff" outputter="simple">
-				<insert path="/" xml="${src.xml}" position="under"/>
+				<insert path="/" xml="${src.xml}" position="under" />
 			</xmltask>
 		</sequential>
 	</macrodef>
-	
+
 	<macrodef name="addlibs">
 		<attribute name="from" />
 		<sequential>
@@ -273,7 +285,7 @@
 			</copy>
 		</sequential>
 	</macrodef>
-	
+
 	<macrodef name="mapping">
 		<attribute name="physical" default="" />
 		<attribute name="virtual" />
@@ -395,24 +407,34 @@
 		</antcontrib:if>
 	</target>
 
-	<target name="exists.mail.xml">
+	<target name="check.creds">
+		<antcontrib:if>
+			<available file="${basedir}/creds.txt" />
+			<then>
+			</then>
+			<else>
+				<echo file="${basedir}/creds.txt" message="# credentials token values: do not commit this file.  ignore if possible" />
+			</else>
+		</antcontrib:if>
+	</target>
+
+
+	<target name="exists.mail.xml" depends="check.creds">
 		<available file="${basedir}/mail.${build.type}.xml" type="file" property="exists.mail.xml" />
 		<antcontrib:if>
 			<equals arg1="${exists.mail.xml}" arg2="true" />
 			<then>
 				<echo message="mail settings file exists : ${basedir}/mail.${build.type}.xml " />
-			    <loadfile
-			      property="mail.xml"
-			      srcFile="mail.${build.type}.xml">
+				<loadfile property="mail.xml" srcFile="mail.${build.type}.xml">
 					<filterchain>
 						<filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
 							<param type="propertiesfile" value="creds.txt" />
 						</filterreader>
 					</filterchain>
-			    </loadfile>
+				</loadfile>
 				<xmltask destbuffer="mail.buff" outputter="simple">
-					<insert path="/" xml="${mail.xml}" position="under"/>
-				</xmltask>		
+					<insert path="/" xml="${mail.xml}" position="under" />
+				</xmltask>
 			</then>
 			<else>
 				<antcontrib:var name="exists.mail.xml" unset="true" />
@@ -421,18 +443,16 @@
 					<equals arg1="${exists.mail.xml}" arg2="true" />
 					<then>
 						<echo message="mail settings file exists : ${basedir}/mail.xml " />
-					    <loadfile
-					      property="mail.xml"
-					      srcFile="mail.xml">
+						<loadfile property="mail.xml" srcFile="mail.xml">
 							<filterchain>
 								<filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
 									<param type="propertiesfile" value="creds.txt" />
 								</filterreader>
 							</filterchain>
-					    </loadfile>
+						</loadfile>
 						<xmltask destbuffer="mail.buff" outputter="simple">
-							<insert path="/" xml="${mail.xml}" position="under"/>
-						</xmltask>		
+							<insert path="/" xml="${mail.xml}" position="under" />
+						</xmltask>
 					</then>
 					<else>
 						<echo message="No build mail settings file to import : ${basedir}/mail.${build.type}.xml does not exist." />
@@ -468,8 +488,8 @@
 			</else>
 		</antcontrib:if>
 	</target>
-	
-	
+
+
 	<target name="compile-cf">
 		<mkdir dir="${war.temp.dir}" />
 		<sequential>
@@ -503,11 +523,14 @@
 			<then>
 			</then>
 			<else>
-				<echo file="${basedir}/customtags.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><mappings></mappings>]]></echo>
+				<echo file="${basedir}/customtags.xml">
+					<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+					<mappings>
+					</mappings>]]></echo>
 			</else>
 		</antcontrib:if>
-		<requires-ext resource="${ext.dir}/cfmltags/cfantrunner/"/>
-		<requires-ext resource="${ext.dir}/cfmltags/cfantrunner-lib/"/>
+		<requires-ext resource="${ext.dir}/cfmltags/cfantrunner/" />
+		<requires-ext resource="${ext.dir}/cfmltags/cfantrunner-lib/" />
 		<customtag physical="${ext.dir}/cfmltags/cfantrunner" virtual="/cfantrunner" />
 		<addlibs from="${ext.dir}/cfmltags/cfantrunner-lib" />
 	</target>
