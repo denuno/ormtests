@@ -5,7 +5,7 @@
 	<property name="ext.railo.war.uri" value="http://www.getrailo.org/down.cfm?item=/railo/remote/download/${ext.railo.war.version}/custom/all/railo-${ext.railo.war.version}.war" />
 	<property name="ext.railo.war" location="${ext.railo.dir}/railo-${ext.railo.war.version}.war" />
 	<property name="ext.railo.war.dir" location="${ext.railo.dir}/railo.war" />
-	<property name="railo.patch.version" value="3.1.2.012" />
+	<property name="railo.patch.version" value="3.1.2.014" />
 	<property name="railo.patch.buildtype" value="dev" />
 	
 	<target name="railo.requires">
@@ -29,6 +29,7 @@
 			<else>
 				<echo message="Downlaoding patch from http://${railo.patch.buildtype}.getrailo.org/railo/remote/download/${railo.patch.version}/${railo.patch.version}.rc" />
 				<get src="http://${railo.patch.buildtype}.getrailo.org/railo/remote/download/${railo.patch.version}/${railo.patch.version}.rc" dest="${ext.railo.dir}/patches/${railo.patch.version}.rc" verbose="true" ignoreerrors="true" />
+				<copy file="${ext.railo.dir}/patches/${railo.patch.version}.rc" todir="${war.temp.dir}/WEB-INF/lib/railo-server/patches/" overwrite="true" />
 			</else>
 		</antcontrib:if>
 	</target>
@@ -290,7 +291,7 @@
 				<param name="ssl" path="@ssl" default="false" />
 				<param name="tls" path="@tls" default="true" />				
 				<actions>
-					<antcontrib:var name="mapping.exists" unset="true" />
+					<antcontrib:var name="mailserver.exists" unset="true" />
 					<xmltask source="${war.temp.dir}/WEB-INF/lib/railo-server/context/railo-server.xml" dest="${war.temp.dir}/WEB-INF/lib/railo-server/context/railo-server.xml">
 						<copy path="/railo-configuration/mail/server[@smtp='@{smtp}']/@smtp" attrValue="true" property="mailserver.exists" />
 						<replace path="/railo-configuration/mail/server[@smtp=@{smtp}]/text()" if="mailserver.exists">
