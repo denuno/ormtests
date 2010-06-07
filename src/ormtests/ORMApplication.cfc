@@ -1,7 +1,7 @@
 <cfcomponent>
+
 	<cfset path = getBaseTemplatePath() />
 	<cfset dirname = listLast(getDirectoryFromPath(path),"\/") />
-
 	<cfset dbdir = "#getDirectoryFrompath(path)#db/#dirname#" />
 	<cfset h2util = createObject("component","ormtests.H2Util").init(cfadminpassword="testtest") />
 	<cfif NOT h2Util.dsnExists(dirname)>
@@ -9,22 +9,19 @@
 			<cfdirectory action="delete" directory="#dbdir#" recurse="true" />
 		</cfif>
 		<cfset results = h2util.createDSN(dsn=dirname,path=dbdir) />
-
 	</cfif>
-
 	<cfif server.coldfusion.productname eq "Railo">
-		<cfset variables.engine = "railo">
+		<cfset variables.engine = "railo" />
 	<cfelse>
-		<cfset variables.engine = "cf">
+		<cfset variables.engine = "cf" />
 	</cfif>
-
 	<cfset this.name = "#dirname#test" />
 	<cfset server.enableORM = "dinfao" />
 	<cfset this.sessionManagement = true />
 
 	<cffunction name="onSessionStart">
 	</cffunction>
-	
+
 	<cffunction name="onApplicationStart">
 		<cfset session.fart = "silent" />
 	</cffunction>
@@ -49,12 +46,13 @@
 				} />
 		</cfif>
 	</cfif>
-
-<!--- 
-	<cffunction name="onRequestEnd">
+	<!---
+ 
+		<cffunction name="onRequestEnd">
 		<cfargument name="targetPage">
 		<cfset applicationStop()>
-	</cffunction>
- --->
+		</cffunction>
+
+		--->
 
 </cfcomponent>
