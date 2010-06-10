@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-mapping>
+  <!--
+source:/workspace/ormtests/tests/cfml/ormtests/railo-763/Employee.cfc
+compilation-time:{ts '2010-06-10 04:12:28'}
+-->
+  <class entity-name="Employee" node="tests.cfml.ormtests.railo-763.Employee" table="Employee">
+    <id name="id" type="long">
+      <column name="id"/>
+      <generator class="native"/>
+    </id>
+    <property name="lastName" type="string">
+      <column name="lastName"/>
+    </property>
+    <property name="firstName" type="string">
+      <column name="firstName"/>
+    </property>
+    <one-to-one entity-name="OfficeCubicle" name="officeCubicle"/>
+  </class>
+</hibernate-mapping>

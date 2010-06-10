@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-mapping>
+  <!--
+source:/workspace/ormtests/tests/cfml/ormtests/railo-763/OfficeCubicle.cfc
+compilation-time:{ts '2010-06-10 04:12:28'}
+-->
+  <class entity-name="OfficeCubicle" node="tests.cfml.ormtests.railo-763.OfficeCubicle" table="OfficeCubicle">
+    <id name="id" type="long">
+      <column name="id"/>
+      <generator class="foreign">
+        <param name="property">employee</param>
+      </generator>
+    </id>
+    <property name="location" type="string">
+      <column name="location"/>
+    </property>
+    <property name="size" type="string">
+      <column name="size"/>
+    </property>
+    <one-to-one constrained="true" entity-name="Employee" name="employee"/>
+  </class>
+</hibernate-mapping>
