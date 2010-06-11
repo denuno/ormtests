@@ -4,6 +4,36 @@
 	<import file="scm-svn.xml"/>
 	<import file="scm-cvs.xml"/>
 
+	<macrodef name="apply-patch">
+		<attribute name="patchUrl"/>
+		<attribute name="patchlevel" default="0" />
+		<attribute name="patchdir" default="${src.dir}" />
+		<sequential>
+			<delete file="${temp.dir.absolute}/patch.txt"/>
+			<get src="@{patchUrl}" dest="${temp.dir.absolute}/patch.txt" verbose="true" ignoreerrors="false" />
+			<patch patchfile="${temp.dir.absolute}/patch.txt" strip="@{patchlevel}" dir="@{patchdir}"/>
+			<echo message="Patch results: ${patch.results}"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="load-src-xml">
+		<sequential>
+			<antcontrib:runtarget target="check.creds" />
+			<loadfile property="src.xml" srcFile="src.xml">
+				<filterchain>
+					<filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
+						<param type="token" name="src.dir" value="${src.dir}"/>
+						<param type="token" name="war.temp.dir" value="${war.temp.dir}"/>
+						<param type="propertiesfile" value="creds.txt" />
+					</filterreader>
+				</filterchain>
+			</loadfile>
+			<xmltask destbuffer="src.buff" outputter="simple">
+				<insert path="/" xml="${src.xml}" position="under" />
+			</xmltask>
+		</sequential>
+	</macrodef>
+	
 	<target name="exists.src.xml">
 		<available file="${basedir}/src.xml" type="file"
 		           property="exists.src.xml"/>
@@ -29,6 +59,7 @@
 			<else>
 				<echo message="Src dir : ${src.dir} ain't there, downloading" />
 				<mkdir dir="${src.dir}"/>
+				<antcontrib:runtarget target="project.update" />				
 				<antcontrib:runtarget target="src.import" />				
 			</else>
 		</antcontrib:if>
@@ -41,11 +72,24 @@
 	</target>
 	
 	<target name="check.project.for.newrevision" depends="get.project.src.type" unless="revisions.are.same" if="exists.src.xml">
-		<antcontrib:runtarget target="check.project.for.newrevision.${project.src.type}" />
+		<available file="${project.src.dest}" type="dir" property="exists.project.dest.dir" />
+		<antcontrib:if>
+			<equals arg1="${exists.project.dest.dir}" arg2="true" />
+			<then>
+				<antcontrib:runtarget target="check.project.for.newrevision.${project.src.type}" />
+			</then>
+			<else>
+				<echo message="Not there: ${project.src.dest}" />
+			</else>
+		</antcontrib:if>
 	</target>
 
 	<target name="project.update" depends="check.project.for.newrevision" unless="revisions.are.same" if="exists.src.xml">
 		<antcontrib:runtarget target="project.update.${project.src.type}" />
+	</target>
+
+	<target name="project.checkout" depends="get.project.src.type" if="exists.src.xml">
+		<antcontrib:runtarget target="project.checkout.${project.src.type}" />
 	</target>
 
 	<target name="get.project.src.type" depends="exists.src.xml" if="exists.src.xml">
@@ -56,7 +100,8 @@
 		        <param name="uri" path="@uri" default="NONE"/>
 		        <actions>
 		        	<property name="project.src.type" value="@{type}" />
-		    		<echo message="Project src type : ${project.src.type}"/>
+		        	<property name="project.src.dest" value="@{dest}" />
+		    		<echo message="Project src type : ${project.src.type} dest: @{dest}"/>
 		        </actions>
 			</call>  
 		</xmltask>  	
