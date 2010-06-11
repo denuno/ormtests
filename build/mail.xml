@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mail>
-	<settings log="./temp/logs/mail.log" spool-enable="false"
+	<settings log="@log.dir@/mail.log" spool-enable="false"
 		spool-interval="5" timeout="30" />
 	<servers>
+	<!-- username and password and whatever else you want are stored in creds.txt -->
 		<server password="@gmail.password@" logsent="true"
 			port="587" smtp="smtp.gmail.com" ssl="false" tls="true" username="@gmail.user@" />
 	</servers>
