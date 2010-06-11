@@ -31,9 +31,9 @@
 	<property name="ext.acf.war" location="/workspace/cfdistro/ext/acf/9/cfusion.war" />
 	<property name="tests.run.url" value="http://localhost:${runwar.port}/${distro.name}/tests/index.cfm" />
 
-	<import file="cfdistro/build.xml" />
-	<!--
 	<import file="${basedir}/../../cfdistro/src/cfdistro/build.xml" />
+	<!--
+	<import file="cfdistro/build.xml" />
 	-->
 
 	<target name="build.localdev" depends="src.to.mappings.xml">
