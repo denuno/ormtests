@@ -1,37 +1,9 @@
 <project name="ormtests.build" default="build.localdev" basedir="./"
 	xmlns:antcontrib="antlib:net.sf.antcontrib">
 
-	<property name="distro.name" value="ormtests" />
+	<loadproperties srcfile="build.properties"/>
 
-	<property name="default.cfengine" value="railo" />
-	<!--
-	<property name="default.cfengine" value="acf" />
-	-->
-
-	
-	<property name="src.dir" location="../src" />
-	<property name="tests.dir" location="../tests" />
-	<property name="temp.dir" location="./temp" />
-	<property name="dist.dir" location="./dist" />
-	<property name="pub.dir" location="../pub" />
-	<property name="conf.dir" location="../conf" />
-
-	<property name="cfadmin.password" value="testtest" />
-	<property name="runwar.port" value="8080" />
-	<!-- if add.libs.dir is set, any jars will be copied to war.lib.dir -->
-	<property name="add.libs.dir" value="../lib" />
-	<!-- url rewriting -->
-	<property name="urlrewritefilter.log.level" value="WARN" />
-	<property name="urlrewritefilter.reload.interval" value="-1" />
-	<!-- railo specific settings -->
-	<property name="railo.patch.version" value="3.1.2.014" />
-	<property name="railo.patch.buildtype" value="dev" />
-	<property name="ext.railo.war.version" value="3.1.2.001" />
-	<property name="ext.railo.war.uri" value="http://www.getrailo.org/down.cfm?item=/railo/remote/download/${ext.railo.war.version}/custom/all/railo-${ext.railo.war.version}.war" />
-	<property name="ext.acf.war" location="/workspace/cfdistro/ext/acf/9/cfusion.war" />
-	<property name="tests.run.url" value="http://localhost:${runwar.port}/${distro.name}/tests/index.cfm" />
-
-	<import file="${basedir}/../../cfdistro/src/cfdistro/build.xml" />
+	<import file="${cfdistro.buildfile}" />
 	<!--
 	<import file="cfdistro/build.xml" />
 	-->
@@ -53,44 +25,10 @@
 				<property name="dont.add.libs" value="true" />
 			</then>
 		</antcontrib:if>
-		<echo message="deleteing any existing hbmxml and db files" />
-		<delete includeemptydirs="true">
-			<fileset dir="${tests.dir}/cfml/" includes="**/db/**" />
-		</delete>
-		<delete>
-			<fileset dir="${tests.dir}/cfml/" includes="**/*.hbmxml" />
-			<fileset dir="${tests.dir}/cfml/" includes="**/*.cfc.hbm.xml" />
-		</delete>
 
 		<antcontrib:runtarget target="cfdistro.build.localdev" />
-		<fileservlet servletname="fileServlet" directory="${src.dir}/../pub"
-			urlpattern="/pub/*" />
-		<!--
-			getting "Failed to specify text in replace" means you need to escape
-			& like so: &amp;amp;
-		-->
-		<antcontrib:runtarget target="urlrewritefilter.servlet.install" />
-		<urlrewrite name="dirToCfm" from="(.*)/$" to="$1/index.cfm"
-			type="forward" />
-		<urlrewrite name="railoContext" from="/railo-context/(.*)"
-			to="/railo-context/$1" type="forward" last="true" />
-		<urlrewrite name="cfide" from="/CFIDE/(.*)" to="/CFIDE/$1"
-			type="forward" last="true" />
-		<urlrewrite name="noRailoAdmin" from="/railo-context/admin/(.*)"
-			to="/" type="forward" enabled="false" />
-		<urlrewrite name="tests" from="/tests/(.*)" to="/tests/$1"
-			type="forward" last="true" />
-		<urlrewrite name="root" from="^/$" to="/index.cfm" type="forward" />
-		<urlrewrite name="rootToPub" from="/(.*)" to="/pub/$1"
-			type="forward" />
-		<urlrewriteout name="pubToRoot" from="^/pub/(.*)" to="/$1" />
-		<urlrewriteout name="rootToContextPath" from="/(.*)"
-			to="%{context-path}/$1" type="forward" />
-
-		<!--
-			<echo file="${war.temp.dir}/index.cfm" message="&lt;cflocation
-			url=&quot;/cfdistro/cfmlapp/&quot;&gt;"/>
-		-->
+		<echo file="${war.temp.dir}/index.cfm" message="&lt;cflocation
+		url=&quot;tests/index.cfm&quot;&gt;"/>
 		<antcontrib:if>
 			<equals arg1="${default.cfengine}" arg2="acf" />
 			<then>
@@ -118,6 +56,18 @@
 	</target>
 	<target name="build.localdev.stop">
 		<antcontrib:runtarget target="runwar.stop" />
+	</target>
+
+	<target name="clean">
+		<echo message="deleteing any existing hbmxml and db files" />
+		<delete includeemptydirs="true">
+			<fileset dir="${tests.dir}/cfml/" includes="**/db/**" />
+		</delete>
+		<delete>
+			<fileset dir="${tests.dir}/cfml/" includes="**/*.hbmxml" />
+			<fileset dir="${tests.dir}/cfml/" includes="**/*.cfc.hbm.xml" />
+		</delete>
+		<antcontrib:runtarget target="cfdistro.clean" />
 	</target>
 
 	<target name="build.war.binary" depends="compile-cf">
