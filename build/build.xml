@@ -1,4 +1,4 @@
-<project name="ormtests.build" default="build.localdev" basedir="./"
+<project name="ormtests.build" default="tests.build.start.run.stop" basedir="./"
 	xmlns:antcontrib="antlib:net.sf.antcontrib">
 
 	<loadproperties srcfile="build.properties"/>
@@ -15,9 +15,10 @@
 		-->
 		<!-- set debugging -->
 		<property name="debugging.enabled" value="false" />
+		<mkdir dir="${basedir}/../tests" />
+		<mkdir dir="${basedir}/../pub" />
 		<mapping physical="${basedir}/../tests" virtual="/tests" />
 		<mapping physical="${basedir}/../pub" virtual="/pub" />
-		<mapping physical="${src.dir}/cfdistro/org" virtual="/org" />
 		<antcontrib:if>
 			<equals arg1="${default.cfengine}" arg2="acf" />
 			<then>

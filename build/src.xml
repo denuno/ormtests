@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <src>
 	<project>
-		<src dest="../" type="git" 
-		uri="git://github.com/denuno/shentegration.git" 
-		user="guest" password="guess" />
+		<src dest="@src.dir@/../" type="git" 
+		uri="git://github.com/denuno/ormtests.git" 
+		user="" password="" />
 	</project>
 	<sources>
-		<src dest="./" type="svn" 
+		<src dest="@src.dir@/mxunit" type="svn" 
 		uri="http://mxunit.googlecode.com/svn/mxunit/trunk"
-		dirname="mxunit" 
 		user="" password="" />
 
 <!-- 
