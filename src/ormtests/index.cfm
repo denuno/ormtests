@@ -41,11 +41,14 @@
 	</cfif>
 </cfloop>
 	</cfsavecontent>
+
 <cfif url.email>
-	<!--- change this 'from' email! --->
-	<cfmail from="#url.from#" to="#url.recipients#" subject="#server.coldfusion.productname# Test Results : #DateFormat(now(),'short')# @ #TimeFormat(now(),'short')#" type="html">
-		#recenthtml# 
-	</cfmail>
+	<cftry>
+		<cfmail from="#url.from#" to="#url.recipients#" subject="#server.coldfusion.productname# Test Results : #DateFormat(now(),'short')# @ #TimeFormat(now(),'short')#" type="html">
+			#recenthtml# 
+		</cfmail>
+		<cfcatch></cfcatch>
+	</cftry>
 </cfif>
 <cftry>
 	<cfdirectory action="create" directory="#expandPath("/tests/")#/results">
