@@ -1,1 +1,0 @@
-<cfinclude template="/ormtests/index.cfm" />

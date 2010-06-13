@@ -1,1 +1,0 @@
-<cflocation url="/ormtests/index.cfm" addtoken="false" />
