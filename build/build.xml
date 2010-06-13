@@ -1,4 +1,4 @@
-<project name="ormtests.build" default="tests.build.start.run.stop" basedir="./"
+<project name="ormtests.build" default="build.localdev.start.launch" basedir="./"
 	xmlns:antcontrib="antlib:net.sf.antcontrib">
 
 	<loadproperties srcfile="build.properties"/>

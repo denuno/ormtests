@@ -636,6 +636,7 @@
 		<copy todir="${dist.dir}/cfdistro/build/cfdistro" verbose="false">
 			<fileset dir="${cfdistro.basedir}/" excludes="ext/**" />
 		</copy>
+		<zip destfile="${dist.dir}/${distro.name}-cfdistro.zip" basedir="${dist.dir}/cfdistro/"/>
 	</target>
 
 </project>
