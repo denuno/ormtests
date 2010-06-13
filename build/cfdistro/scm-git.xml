@@ -103,7 +103,7 @@
 						</then>
 						<else>
 							<echo message="no .git dir, let us try to get one- this may take a bit..." />
-							<delete dir="${temp.dir}/git-temp"/>
+							<delete dir="${temp.dir}/git-temp" failonerror="false"/>
 							<git-clone-pull repository="@{uri}" dest="${temp.dir}/git-temp" />
 							<copy todir="@{dest}">
 								<fileset dir="${temp.dir}/git-temp" excludes="${temp.dir}/git-temp/build/**" />
