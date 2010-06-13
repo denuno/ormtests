@@ -100,7 +100,7 @@
 				</and>
 			</waitfor>
 			<antcontrib:runtarget target="if.toolong.echo" />
-			<echo message="waiting for railo"/>
+			<echo message="stop jetty by typing: ant runwar.stop"/>
 		</sequential>
 	</target>
 
@@ -134,12 +134,13 @@
 				</and>
 			</waitfor>
 			<antcontrib:runtarget target="if.toolong.echo" />
-			<echo message="waiting for railo"/>
+			<echo message="stop jetty by typing: ant runwar.stop"/>
 		</sequential>
 	</target>
 	
 	
 	<target name="runwar.stop" description="stops jetty-runner server">
+		<echo message="stopping jetty.  peace out bro!"/>
 		<java classname="runwar.Stop" classpathref="runwar.lib.path">
 			<arg value="${runwar.stop.socket}" />
 		</java>

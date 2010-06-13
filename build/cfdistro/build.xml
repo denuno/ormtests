@@ -630,13 +630,14 @@
 	</target>
 
 	<target name="cfdistro.dist" depends="clean">
-		<copy todir="${dist.dir}/cfdistro/build" verbose="false">
+		<copy todir="${dist.dir}/${distro.name}-build/build" verbose="false">
 			<fileset dir="${basedir}/" />
 		</copy>
-		<copy todir="${dist.dir}/cfdistro/build/cfdistro" verbose="false">
+		<delete file="${dist.dir}/${distro.name}-build/build/creds.txt" />
+		<copy todir="${dist.dir}/${distro.name}-build/build/cfdistro" verbose="false">
 			<fileset dir="${cfdistro.basedir}/" excludes="ext/**" />
 		</copy>
-		<zip destfile="${dist.dir}/${distro.name}-build.zip" basedir="${dist.dir}/build/"/>
+		<zip destfile="${dist.dir}/${distro.name}-build.zip" basedir="${dist.dir}/${distro.name}-build/"/>
 	</target>
 
 </project>

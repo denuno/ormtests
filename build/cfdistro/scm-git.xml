@@ -13,7 +13,7 @@
 				</or>
 				<then>
 					<echo message="Using system Git @{command}" />
-					<exec executable="git" dir="@{dir}" outputproperty="git.results">
+					<exec executable="git" dir="@{dir}" outputproperty="git.results" failifexecutionfails="false">
 						<arg value="@{command}" />
 						<args />
 					</exec>
@@ -93,13 +93,16 @@
 				<actions>
 					<available file="@dest/.git" type="dir" property="exists.git.dir" />
 					<antcontrib:if>
-						<equals arg1="${exists.git.dir}" arg2="true" />
+						<or>
+							<equals arg1="${exists.git.dir}" arg2="true" />
+							<equals arg1="${project.overwrite}" arg2="true" />
+						</or>
 						<then>
 							<echo message="updating src: @{dest}" />
 							<git-clone-pull repository="@{uri}" dir="${basedir}" dest="${temp.dir}/git-temp" />
 						</then>
 						<else>
-							<echo message="no .git dir, let us try to get one" />
+							<echo message="no .git dir, let us try to get one- this may take a bit..." />
 							<delete dir="${temp.dir}/git-temp"/>
 							<git-clone-pull repository="@{uri}" dest="${temp.dir}/git-temp" />
 							<copy todir="@{dest}">
