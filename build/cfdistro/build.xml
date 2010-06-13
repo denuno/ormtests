@@ -494,7 +494,7 @@
 			<then>
 			</then>
 			<else>
-				<echo file="${basedir}/creds.txt" message="# credentials token values: do not commit this file.  ignore if possible" />
+				<echo file="${basedir}/creds.txt" message="# credentials token values: tokens will replace src.xml datasources.xml mail.xml ${line.separator}#do not commit this file.  ignore if possible! ${line.separator}#gmail.user=someuser${line.separator}#gmail.password=fournick8" />
 			</else>
 		</antcontrib:if>
 	</target>
@@ -636,7 +636,7 @@
 		<copy todir="${dist.dir}/cfdistro/build/cfdistro" verbose="false">
 			<fileset dir="${cfdistro.basedir}/" excludes="ext/**" />
 		</copy>
-		<zip destfile="${dist.dir}/${distro.name}-cfdistro.zip" basedir="${dist.dir}/cfdistro/"/>
+		<zip destfile="${dist.dir}/${distro.name}-build.zip" basedir="${dist.dir}/build/"/>
 	</target>
 
 </project>

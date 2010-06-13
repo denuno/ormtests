@@ -6,7 +6,7 @@
 		<equals arg1="${default.cfengine}" arg2="acf" />
 		<then>
 			<path id="runwar.lib.path">
-				<fileset dir="${cfdistro.basedir}/ext/ddlutils/lib">
+				<fileset dir="${cfdistro.basedir}/lib">
 					<include name="*.jar" />
 				</fileset>
 				<fileset dir="${war.temp.dir}/WEB-INF/cfusion/lib">
@@ -16,7 +16,7 @@
 		</then>
 		<else>
 			<path id="runwar.lib.path">
-				<fileset dir="${cfdistro.basedir}/ext/ddlutils/lib">
+				<fileset dir="${cfdistro.basedir}/lib">
 					<include name="*.jar" />
 				</fileset>
 				<fileset dir="${war.temp.dir}/WEB-INF/lib">

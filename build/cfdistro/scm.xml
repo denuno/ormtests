@@ -72,15 +72,15 @@
 	</target>
 	
 	<target name="check.project.for.newrevision" depends="get.project.src.type" unless="revisions.are.same" if="exists.src.xml">
-		<available file="${project.src.dest}" type="dir" property="exists.project.dest.dir" />
+		<available file="${project.src.dest}/${project.src.type}" type="dir" property="exists.project.dest.dir" />
 		<antcontrib:if>
 			<equals arg1="${exists.project.dest.dir}" arg2="true" />
 			<then>
 				<antcontrib:runtarget target="check.project.for.newrevision.${project.src.type}" />
 			</then>
 			<else>
-				<echo message="Not there: ${project.src.dest}" />
-			</else>
+				<echo message="Not there: ${project.src.dest}/.${project.src.type}" />
+			</else> 
 		</antcontrib:if>
 	</target>
 
