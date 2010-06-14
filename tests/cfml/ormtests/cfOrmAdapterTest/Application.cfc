@@ -15,10 +15,9 @@ component output="false" {
 	} else {
 		variables.engine = "cf";
 	};
+
 	this.name = "#dirname#test";
 	server.enableORM = "dinfao";
-
-	this.name = "cfOrmAdapterTest";
 	this.ormenabled = true;
 	this.datasource = dirname;
 	this.ormsettings = {
