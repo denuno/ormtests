@@ -12,14 +12,14 @@
 					<equals arg1="@{command}" arg2="pull" />
 				</or>
 				<then>
-					<echo message="Using system Git @{command}" />
+					<echo message="Using system Git - command: @{command}" />
 					<exec executable="git" dir="@{dir}" outputproperty="git.results" failifexecutionfails="false">
 						<arg value="@{command}" />
 						<args />
 					</exec>
 				</then>
 				<else>
-					<echo message="JGit @{command}" />
+					<echo message="JGit - command: @{command}" />
 		            <java classname="org.eclipse.jgit.pgm.Main" classpathref="build.lib.path" fork="true" dir="@{dir}" outputproperty="git.results">
 						<arg value="@{command}" />
 						<args />
@@ -50,6 +50,32 @@
 			</git>
 			<unzip src="@{dest}/src.zip" dest="@{dest}" />
 			<delete file="@{dest}/src.zip"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="git-clone">
+		<attribute name="repository" />
+		<attribute name="dest" />
+		<sequential>
+			<git command="clone">
+				<args>
+					<arg value="@{repository}" />
+					<arg value="@{dest}" />
+				</args>
+			</git>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="git-checkout">
+		<attribute name="repository" />
+		<attribute name="branch" />
+		<sequential>
+			<git command="branch" dir="@{repository}">
+				<args>
+					<arg value="-r" />
+					<arg value="@{branch}" />
+				</args>
+			</git>
 		</sequential>
 	</macrodef>
 
@@ -90,6 +116,7 @@
 				<param name="dest" path="@dest" default="NONE" />
 				<param name="type" path="@type" default="NONE" />
 				<param name="uri" path="@uri" default="NONE" />
+				<param name="branch" path="@branch" default="NONE" />
 				<actions>
 					<available file="@dest/.git" type="dir" property="exists.git.dir" />
 					<antcontrib:if>
@@ -103,8 +130,9 @@
 						</then>
 						<else>
 							<echo message="no .git dir, let us try to get one- this may take a bit..." />
-							<delete dir="${temp.dir}/git-temp" failonerror="false"/>
-							<git-clone-pull repository="@{uri}" dest="${temp.dir}/git-temp" />
+							<delete dir="${temp.dir}/git-temp"/>
+							<git-clone repository="@{uri}" dest="${temp.dir}/git-temp" />
+							<git-checkout repository="${temp.dir}/git-temp" branch="@{branch}"/>
 							<copy todir="@{dest}">
 								<fileset dir="${temp.dir}/git-temp" excludes="${temp.dir}/git-temp/build/**" />
 							</copy>

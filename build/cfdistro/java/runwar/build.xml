@@ -39,8 +39,13 @@
 	<target name="runwar.compile">
 		<delete dir="${runwar.basedir}/bin/runwar/"/>
 		<mkdir dir="${runwar.basedir}/bin/runwar/"/>
+		<!--
 		<javac srcdir="${runwar.basedir}/src/runwar" destdir="${runwar.basedir}/bin/runwar"
     		classpathref="runwar.lib.path"/>
+    	-->
+		<javac-ecj srcdir="${runwar.basedir}/src/runwar" destdir="${runwar.basedir}/bin/runwar"
+			classpath="${toString:runwar.lib.path}"/>
+		    		
 	</target>
 
 	<target name="runwar.jar" depends="runwar.compile">
@@ -133,6 +138,8 @@
 					-->
 				</and>
 			</waitfor>
+			<echo message="waiting for cfml engine"/>
+			<sleep seconds="5" />
 			<antcontrib:runtarget target="if.toolong.echo" />
 			<echo message="stop jetty by typing: ant runwar.stop"/>
 		</sequential>
