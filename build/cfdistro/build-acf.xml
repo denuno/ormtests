@@ -9,7 +9,7 @@
 
 	<target name="acf.build" depends="clean">
 		<unzip src="${ext.acf.war}"
-		       dest="${war.temp.dir}">
+		       dest="${war.target.dir}">
 <!--
 		    <patternset>
 		        <include name="**/*.java"/>
@@ -17,14 +17,15 @@
 		    </patternset>
 -->		    
 		</unzip>
-		<requires-ext resource="${ext.acf.dir}/9/web-noflash.xml" />
-		<copy file="${ext.acf.dir}/9/web-noflash.xml" tofile="${war.temp.dir}/WEB-INF/web.xml" overwrite="true" />
 <!--
-		<copy file="${ext.acf.war.dir}/WEB-INF/cfusion/lib/neo-runtime.xml" tofile="${war.temp.dir}/WEB-INF/cfusion/lib/neo-runtime.xml" overwrite="true" />
-		<copy file="${ext.acf.war.dir}/WEB-INF/cfusion/lib/adminconfig.xml" tofile="${war.temp.dir}/WEB-INF/cfusion/lib/adminconfig.xml" overwrite="true" />
+		<requires-ext resource="${ext.acf.dir}/9/web-noflash.xml" />
+		<copy file="${ext.acf.dir}/9/web-noflash.xml" tofile="${war.target.dir}/WEB-INF/web.xml" overwrite="true" />
+		
+		<copy file="${ext.acf.war.dir}/WEB-INF/cfusion/lib/neo-runtime.xml" tofile="${war.target.dir}/WEB-INF/cfusion/lib/neo-runtime.xml" overwrite="true" />
+		<copy file="${ext.acf.war.dir}/WEB-INF/cfusion/lib/adminconfig.xml" tofile="${war.target.dir}/WEB-INF/cfusion/lib/adminconfig.xml" overwrite="true" />
 -->
-		<echo file="${war.temp.dir}/WEB-INF/cfusion/lib/password.properties" message="rdspassword=${line.separator}password=${cfadmin.password}${line.separator}encrypted=false" />
-		<echo file="${war.temp.dir}/WEB-INF/cfusion/lib/license.properties">
+		<echo file="${war.target.dir}/WEB-INF/cfusion/lib/password.properties" message="rdspassword=${line.separator}password=${cfadmin.password}${line.separator}encrypted=false" />
+		<echo file="${war.target.dir}/WEB-INF/cfusion/lib/license.properties">
 			<![CDATA[
 #CF License File
 #Sat Nov 21 15:21:42 MST 2009
@@ -41,12 +42,12 @@ previous_sn=
 vendor=0YV\#Y\!,U&;_;YN@)&)B'"WP  \n
 			]]>
 		</echo>
-		<xmltask source="${war.temp.dir}/WEB-INF/cfusion/lib/adminconfig.xml" dest="${war.temp.dir}/WEB-INF/cfusion/lib/adminconfig.xml">
+		<xmltask source="${war.target.dir}/WEB-INF/cfusion/lib/adminconfig.xml" dest="${war.target.dir}/WEB-INF/cfusion/lib/adminconfig.xml">
 			<replace path="/setupconfig/runsetupwizard/text()" withText="false" />
 			<replace path="/setupconfig/setupoptions/sampleapps/text()" withText="false" />
 			<replace path="/setupconfig/setupoptions/enablerds/text()" withText="false" />
 		</xmltask>
-  		<xmltask source="${war.temp.dir}/WEB-INF/cfusion/lib/neo-runtime.xml" dest="${war.temp.dir}/WEB-INF/cfusion/lib/neo-runtime.xml">
+  		<xmltask source="${war.target.dir}/WEB-INF/cfusion/lib/neo-runtime.xml" dest="${war.target.dir}/WEB-INF/cfusion/lib/neo-runtime.xml">
 			<attr path="//struct/var[@name='trustedCacheEnabled']/boolean" attr="value" value="${cache.trusted}"/>
 			<attr path="//struct/var[@name='saveClassFiles']/boolean" attr="value" value="${cache.saveclassfiles}"/>
 			<attr path="//struct/var[@name='logSlowRequests']/boolean" attr="value" value="false"/>
@@ -71,8 +72,8 @@ vendor=0YV\#Y\!,U&;_;YN@)&)B'"WP  \n
 		<property name="debugging.robust" value="false" />
 		<property name="debugging.template" value="/WEB-INF/debug/debug-classic.cfm" />
 		<requires-ext resource="${ext.acf.dir}/9/debug-classic.cfm" />
-		<copy file="${ext.acf.dir}/9/debug-classic.cfm" todir="${war.temp.dir}/WEB-INF/debug" overwrite="true" />
-		<xmltask source="${war.temp.dir}/WEB-INF/cfusion/lib/neo-debug.xml" dest="${war.temp.dir}/WEB-INF/cfusion/lib/neo-debug.xml">
+		<copy file="${ext.acf.dir}/9/debug-classic.cfm" todir="${war.target.dir}/WEB-INF/debug" overwrite="true" />
+		<xmltask source="${war.target.dir}/WEB-INF/cfusion/lib/neo-debug.xml" dest="${war.target.dir}/WEB-INF/cfusion/lib/neo-debug.xml">
 			<attr path="//struct/var[@name='enabled']/boolean" attr="value" value="${debugging.enabled}"/>
 			<attr path="//struct/var[@name='robust_enabled']/boolean" attr="value" value="true"/>
 			<attr path="//struct/var[@name='requestvar']/boolean" attr="value" value="true"/>
@@ -81,13 +82,13 @@ vendor=0YV\#Y\!,U&;_;YN@)&)B'"WP  \n
 	</target>
 	
 	<target name="acf.mappings.xml.build" depends="exists.mappings.xml" if="exists.mappings.xml">
-	   <xmltask source="mappings.xml">
+	   <xmltask sourcebuffer="mappings.buff">
 	      <call path="mappings/*">
 	        <param name="virtual" path="@virtual" default="NONE"/>
 	        <param name="physical" path="@physical" default="NONE"/>
 	        <actions>
 	        	<antcontrib:var name="mapping.exists" unset="true"/>
-	      		<xmltask source="${war.temp.dir}/WEB-INF/cfusion/lib/neo-runtime.xml" dest="${war.temp.dir}/WEB-INF/cfusion/lib/neo-runtime.xml">
+	      		<xmltask source="${war.target.dir}/WEB-INF/cfusion/lib/neo-runtime.xml" dest="${war.target.dir}/WEB-INF/cfusion/lib/neo-runtime.xml">
 	  					<copy path="//data/array/struct[8]/var[@name='@{virtual}']/@name" attrValue="true" property="mapping.exists"/>
 	  					<replace path="//data/array/struct[8]/var[@name='@{virtual}']" if="mapping.exists">
 	  						<![CDATA[
@@ -125,7 +126,7 @@ vendor=0YV\#Y\!,U&;_;YN@)&)B'"WP  \n
 				<param name="physical" path="@physical" default="NONE" />
 				<actions>
 					<antcontrib:var name="mapping.exists" unset="true" />
-		      		<xmltask source="${war.temp.dir}/WEB-INF/cfusion/lib/neo-runtime.xml" dest="${war.temp.dir}/WEB-INF/cfusion/lib/neo-runtime.xml">
+		      		<xmltask source="${war.target.dir}/WEB-INF/cfusion/lib/neo-runtime.xml" dest="${war.target.dir}/WEB-INF/cfusion/lib/neo-runtime.xml">
 						<copy path="/railo-configuration/custom-tag/mapping[@physical='@{physical}']/@physical" attrValue="true" property="mapping.exists" />
 						<replace path="/railo-configuration/custom-tag/mapping[@physical=@{physical}]/text()" if="mapping.exists">
 							<![CDATA[
@@ -159,7 +160,7 @@ vendor=0YV\#Y\!,U&;_;YN@)&)B'"WP  \n
 	
 	<target name="acf.mail.xml.build" depends="exists.mail.xml" if="exists.mail.xml">
 		<requires-ext resource="${ext.acf.dir}/9/neo-mail.xml" />
-		<copy file="${ext.acf.dir}/9/neo-mail.xml" todir="${war.temp.dir}/WEB-INF/cfusion/lib/" overwrite="true" />
+		<copy file="${ext.acf.dir}/9/neo-mail.xml" todir="${war.target.dir}/WEB-INF/cfusion/lib/" overwrite="true" />
 		<xmltask sourcebuffer="mail.buff" outputter="simple">
 			<call path="mail/settings">
 				<param name="log" path="@log" default="./temp/logs/mail.log" />
@@ -168,7 +169,7 @@ vendor=0YV\#Y\!,U&;_;YN@)&)B'"WP  \n
 				<param name="spool-interval" path="@spool-interval" default="5" />
 				<param name="timeout" path="@timeout" default="30" />
 				<actions>
-					<xmltask source="${war.temp.dir}/WEB-INF/cfusion/lib/neo-mail.xml" dest="${war.temp.dir}/WEB-INF/cfusion/lib/neo-mail.xml">
+					<xmltask source="${war.target.dir}/WEB-INF/cfusion/lib/neo-mail.xml" dest="${war.target.dir}/WEB-INF/cfusion/lib/neo-mail.xml">
 						<!--
 						<attr path="/railo-configuration/mail" attr="log" value="@{log}" />
 						-->
@@ -200,7 +201,7 @@ vendor=0YV\#Y\!,U&;_;YN@)&)B'"WP  \n
 								
 				<actions>
 					<antcontrib:var name="mailserver.exists" unset="true" />
-					<xmltask source="${war.temp.dir}/WEB-INF/cfusion/lib/neo-mail.xml" dest="${war.temp.dir}/WEB-INF/cfusion/lib/neo-mail.xml">
+					<xmltask source="${war.target.dir}/WEB-INF/cfusion/lib/neo-mail.xml" dest="${war.target.dir}/WEB-INF/cfusion/lib/neo-mail.xml">
 						<copy path="//struct/var[@name='server']/string[text()='@{smtp}']/text()" property="mailserver.exists" />
 						<attr path="//struct/var[@name='sign']/boolean" attr="value" value="@{sign}"/>
 						<replace path="//struct/var[@name='server']/string/text()" withText="@{smtp}" />
@@ -299,7 +300,7 @@ vendor=0YV\#Y\!,U&;_;YN@)&)B'"WP  \n
 					</filterchain>
 				</loadfile>
 	        	<antcontrib:var name="datasource.exists" unset="true"/>
-				<xmltask source="${war.temp.dir}/WEB-INF/cfusion/lib/neo-datasource.xml" dest="${war.temp.dir}/WEB-INF/cfusion/lib/neo-datasource.xml" omitHeader="true">
+				<xmltask source="${war.target.dir}/WEB-INF/cfusion/lib/neo-datasource.xml" dest="${war.target.dir}/WEB-INF/cfusion/lib/neo-datasource.xml" omitHeader="true">
 	  					<copy path="//data/array/struct/var[@name='@{name}']/@name" attrValue="true" property="datasource.exists"/>
 	  					<replace path="//data/array/struct/var[@name='@{name}']" if="datasource.exists" withXml="${dsn.xml}" expandProperties="false"/>
 	  					<insert path="//data/array/struct[1]" position="under" unless="datasource.exists" xml="${dsn.xml}" />
@@ -319,8 +320,8 @@ vendor=0YV\#Y\!,U&;_;YN@)&)B'"WP  \n
 	</target>	
 	
 	<target name="acf.add.libs" if="add.libs.dir" unless="dont.add.libs">
-		<echo message="Copying libs: ${add.libs.dir} to: ${war.temp.dir}/WEB-INF/cfusion/lib" /> 
-		<copy todir="${war.temp.dir}/WEB-INF/cfusion/lib" overwrite="true">
+		<echo message="Copying libs: ${add.libs.dir} to: ${war.target.dir}/WEB-INF/cfusion/lib" /> 
+		<copy todir="${war.target.dir}/WEB-INF/cfusion/lib" overwrite="true">
 			<fileset dir="${add.libs.dir}"/>
 		</copy>
 	</target>
