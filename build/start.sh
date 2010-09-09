@@ -1,5 +1,4 @@
-
-	#start script
+#start script
 if test -n "${JAVA_HOME}"; then
   if test -z "${JAVA_EXE}"; then
     JAVA_EXE=$JAVA_HOME/bin/java
@@ -11,5 +10,5 @@ if test -z "${JAVA_EXE}"; then
 fi
 cd $(dirname $0)
 #exec $JAVA_EXE -jar ./lib/jetty-runner-7.0.0.RC5.jar $* > /dev/null 2>&1 &
-exec $JAVA_EXE -Xmx200m -jar /workspace/cfdistro/src/cfdistro/lib/jetty-runner-7.1.0.v20100505.jar --port 8080 --path /ormtests $* temp/ormtests.war
+exec $JAVA_EXE -Xmx200m -jar /workspace/cfdistro/src/cfdistro/lib/jetty-runner-7.1.0.v20100505.jar --port 8088 --path / $* ./temp/ormtests.war
 	
