@@ -8,7 +8,7 @@
 	<import file="cfdistro/build.xml" />
 	-->
 
-	<target name="build.localdev" depends="src.to.mappings.xml">
+	<target name="build" depends="src.to.mappings.xml,cfdistro.build">
 		<!-- add the docs and test mappings for tests and fileservlet -->
 		<!--
 		<mapping physical="${basedir}/../../docs" virtual="/docs"/>
@@ -26,23 +26,32 @@
 				<property name="dont.add.libs" value="true" />
 			</then>
 		</antcontrib:if>
-
-		<antcontrib:runtarget target="cfdistro.build.localdev" />
-		<echo file="${war.temp.dir}/index.cfm" message="&lt;cflocation
+		<!--
+		<fileservlet servletname="fileServlet" directory="${src.dir}/../pub"
+			urlpattern="/pub/*" />
+			getting "Failed to specify text in replace" means you need to escape
+			& like so: &amp;amp;
+		-->
+		<antcontrib:runtarget target="urlrewritefilter.servlet.install" />
+		<urlrewrite name="dirToCfm" from="(.*)/$" to="$1/index.cfm"
+			type="forward" />
+		<urlrewriteout name="rootToContextPath" from="/(.*)"
+			to="%{context-path}/$1" type="forward" />
+		<echo file="${war.target.dir}/index.cfm" message="&lt;cflocation
 		url=&quot;tests/index.cfm&quot;&gt;"/>
 		<antcontrib:if>
 			<equals arg1="${default.cfengine}" arg2="acf" />
 			<then>
-				<copy todir="${war.temp.dir}/mxunit" verbose="false">
+				<copy todir="${war.target.dir}/mxunit" verbose="false">
 					<fileset dir="${src.dir}/mxunit" />
 				</copy>
-				<copy todir="${war.temp.dir}/tests" verbose="false">
+				<copy todir="${war.target.dir}/tests" verbose="false">
 					<fileset dir="${src.dir}/../tests" />
 				</copy>
-				<copy todir="${war.temp.dir}/pub" verbose="false">
+				<copy todir="${war.target.dir}/pub" verbose="false">
 					<fileset dir="${src.dir}/../pub" />
 				</copy>
-				<copy todir="${war.temp.dir}/WEB-INF/lib" file="${add.libs.dir}/h2.jar"
+				<copy todir="${war.target.dir}/WEB-INF/lib" file="${add.libs.dir}/h2.jar"
 					verbose="true" />
 			</then>
 		</antcontrib:if>
@@ -53,10 +62,10 @@
 	</target>
 
 	<target name="build.localdev.start" depends="build.localdev">
-		<antcontrib:runtarget target="runwar.start.background" />
+		<antcontrib:runtarget target="server.start" />
 	</target>
 	<target name="build.localdev.stop">
-		<antcontrib:runtarget target="runwar.stop" />
+		<antcontrib:runtarget target="server.stop" />
 	</target>
 
 	<target name="clean">
