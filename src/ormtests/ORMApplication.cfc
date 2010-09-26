@@ -29,25 +29,15 @@
 	<cfset this.ormEnabled = true />
 	<cfset this.datasource = dirname />
 	<cfif dirname neq "pub">
-		<cfif variables.engine eq "railo">
-			<cfset  this.ormSettings = {
-				dbcreate = 'update',
-				logSQL = 'true',
-				flushAtRequestEnd = 'true',
-				saveMapping = 'true'
-				} />
-		<cfelse>
-			<cfset  this.ormSettings = {
-				dbcreate = 'update',
-				logSQL = 'true',
-				cfclocation="/tests/cfml/ormtests/#dirname#/",
-				flushAtRequestEnd = 'true',
-				saveMapping = 'true'
-				} />
-		</cfif>
+		<cfset  this.ormSettings = {
+			dbcreate = 'dropcreate',
+			logSQL = 'true',
+			flushAtRequestEnd = 'true',
+			saveMapping = 'true'
+			} />
 	</cfif>
 	<!---
- 
+
 		<cffunction name="onRequestEnd">
 		<cfargument name="targetPage">
 		<cfset applicationStop()>

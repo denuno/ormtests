@@ -1,6 +1,5 @@
 <cfscript>
-	writeOutput("Hello World!");
 	ormReload();
 	MainObject = EntityLoad("MainObject");
-	writeDump(MainObject);
 </cfscript>
+At least loaded the mainobject?

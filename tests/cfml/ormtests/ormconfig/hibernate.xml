@@ -11,7 +11,7 @@
 		<!-- properties -->
 		<property name="show_sql">true</property>
 		<!-- mapping files -->
-		<mapping resource="user.hbm.xml" />
+		<mapping resource="hbm/user.hbm.xml" />
 
 	</session-factory>
 

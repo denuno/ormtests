@@ -15,16 +15,15 @@ component output="false" {
 	} else {
 		variables.engine = "cf";
 	};
+//	this.mappings["/"] = expandPath(".");
+//	this.mappings["/railo-context"] = "/WEB-INF/lib/railo-server/context/";
 
 	this.name = "#dirname#test";
 	server.enableORM = "dinfao";
 	this.ormenabled = true;
 	this.datasource = dirname;
-	this.ormsettings = {
-		flushAtRequestEnd=false,
-		dbcreate="dropcreate",
-		logSQL=true,
-		sqlscript="loadScript.sql",
-		cfclocation="model"
-		};
+	this.ormsettings.logSQL=true;
+	this.ormsettings.dbcreate="dropcreate";
+	this.ormsettings.sqlscript="loadScript.sql";
+	this.ormsettings.cfclocation="model";
 }

@@ -15,13 +15,14 @@
 	<cfset server.enableORM = "dinfao" />
 	<cfset this.ormEnabled = true />
 	<cfset this.datasource = dirname />
-	<cfset  this.ormSettings = {
-		dbcreate = 'update',
-		flushAtRequestEnd = 'true',
-		ormconfig = "hibernate.xml",
-		saveMapping = 'true'
-		} />
-	<!--- 
+	<cfscript>
+	this.ormenabled = true;
+	this.datasource = dirname;
+	this.ormsettings.logSQL=true;
+	this.ormsettings.dbcreate="dropcreate";
+	this.ormsettings.ormconfig="hibernate.xml";
+	</cfscript>
+	<!---
 		<cfset this.datasource = "ormtest" />
 		--->
 

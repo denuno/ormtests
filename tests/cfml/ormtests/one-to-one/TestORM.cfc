@@ -13,19 +13,19 @@
 	</cffunction>
 
 	<cffunction name="testLoadEntities">
-		<cfset OfficeCubicle = createObject( "component", "OfficeCubicle" ) />
-		<cfset Employee = entityload("Employee") />
+		<cfset var OfficeCubicle = createObject( "component", "OfficeCubicle" ) />
+		<cfset var Employee = entityload("Employee") />
 	</cffunction>
 
 	<cffunction name="testAddOneToOneEntity">
-		<cfset Employee = createObject( "component", "Employee" ) />
-		<cfset OfficeCubicle = createObject( "component", "OfficeCubicle" ) />
+		<cfset var Employee = createObject( "component", "Employee" ) />
+		<cfset var OfficeCubicle = createObject( "component", "OfficeCubicle" ) />
 		<cfset Employee.setFirstName( "Brock#randRange(1,777)##randRange(1,777)#" ) />
 		<cfset Employee.setLastName( "Sampson#randRange(1,777)##randRange(1,777)#" ) />
 		<cfset OfficeCubicle.setLocation( "venture compound" ) />
-		<cfset entitySave( OfficeCubicle ) />
-		<cfset Employee.setOfficeCubicle(OfficeCubicle) />
+		<cfset OfficeCubicle.setEmployee(Employee) />
 		<cfset entitySave( Employee ) />
+		<cfset entitySave( OfficeCubicle ) />
 	</cffunction>
 
 </cfcomponent>

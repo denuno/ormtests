@@ -56,15 +56,15 @@
 </cffunction>
 
 <cffunction name="getDatasources" access="private" returntype="struct" output="false" description="Return the DSNs and their properties.">
-	<cfset var local = structNew() />
+	<cfset var hocal = structNew() />
 	<cfset var key   = "" />
 	<cfset var stTmp = structNew() />
-	<cfset local.dsService = createObject("java", "coldfusion.server.ServiceFactory").DataSourceService />
+	<cfset hocal.dsService = createObject("java", "coldfusion.server.ServiceFactory").DataSourceService />
 	<cfif server.coldfusion.productname eq "Railo">
-		<cfset local = local.dsService.getDataSources() />
-		<cfloop collection="#local#" item="key">
+		<cfset hocal = hocal.dsService.getDataSources() />
+		<cfloop collection="#hocal#" item="key">
 			<cfset stTmp[key].name     = key />
-			<cfset stTmp[key].class    = local[key].getDataSourceDef().getClassName() />
+			<cfset stTmp[key].class    = hocal[key].getDataSourceDef().getClassName() />
 			<cfif findNoCase(".mysql.", stTmp[key].class)>
 				<cfset stTmp[key].driver = "MySQL 5" />
 			<cfelseif findNoCase(".db2.", stTmp[key].class)>
@@ -88,16 +88,21 @@
 			<cfelse>
 				<cfset stTmp[key].driver = "Other Driver" />
 			</cfif>
-			<cfset stTmp[key].url = local[key].getDatasourceDef().getURL() />
-			<cfset stTmp[key].urlmap.connectionprops.host     = local[key].getDatasourceDef().getHost() />
-			<cfset stTmp[key].urlmap.connectionprops.port     = local[key].getDatasourceDef().getPort() />
-			<cfset stTmp[key].urlmap.connectionprops.database = local[key].getDatasourceDef().getDatabase() />
+			<cfset stTmp[key].url = hocal[key].getDatasourceDef().getURL() />
+			<cfset stTmp[key].urlmap.connectionprops.host     = hocal[key].getDatasourceDef().getHost() />
+			<cfset stTmp[key].urlmap.connectionprops.port     = hocal[key].getDatasourceDef().getPort() />
+			<cfset stTmp[key].urlmap.connectionprops.database = hocal[key].getDatasourceDef().getDatabase() />
 		</cfloop>
-		<cfset local = stTmp />
+		<cfset hocal = stTmp />
 	<cfelse>
-		<cfreturn local.dsService.getDataSources() />
+		<cfscript>
+			adminObj = createObject("component","cfide.adminapi.administrator");
+			createObject("component","cfide.adminapi.administrator").login(variables.cfadminpassword);
+			myObj = createObject("component","cfide.adminapi.datasource");
+		</cfscript>
+		<cfreturn myObj.getDatasources() />
 	</cfif>
-	<cfreturn local />
+	<cfreturn hocal />
 </cffunction>
 
 <cffunction name="dsnExists" access="public" returntype="boolean" output="false" description="Check if a given DSN name is already in use.">
@@ -111,28 +116,28 @@
 	<cfargument name="datasourceName" type="string" required="true" />
 	<cfargument name="dataSourceProperties" type="struct" required="true" />
 	<cfargument name="checkDestinationAvailable" type="boolean" required="false" default="true" />
-	<cfset var local = structNew() />
-	<cfset local.adminObj = createObject("component","cfide.adminapi.administrator") />
-	<cfset local.adminObj.login(arguments.cfAdminPassword) />
-	<cfset local.datasource = createObject("component","cfide.adminapi.datasource") />
-	<cfset local.dsProps = duplicate( arguments.dataSourceProperties ) />
-	<cfset local.dsProps.name = arguments.datasourceName />
-	<cfset local.datasource.setOther( argumentCollection=local.dsProps ) />
+	<cfset var hocal = structNew() />
+	<cfset hocal.adminObj = createObject("component","cfide.adminapi.administrator") />
+	<cfset hocal.adminObj.login(arguments.cfAdminPassword) />
+	<cfset hocal.datasource = createObject("component","cfide.adminapi.datasource") />
+	<cfset hocal.dsProps = duplicate( arguments.dataSourceProperties ) />
+	<cfset hocal.dsProps.name = arguments.datasourceName />
+	<cfset hocal.datasource.setOther( argumentCollection=hocal.dsProps ) />
 </cffunction>
 
 <cffunction name="verifyDSN" access="private" returntype="struct" output="false" description="Validate a DSN connection.">
 	<cfargument name="dsn" type="string" required="true" />
-	<cfset var local = structNew() />
-	<cfset local.result = structNew() />
-	<cfset local.dsService = createObject("java", "coldfusion.server.ServiceFactory").DataSourceService />
+	<cfset var hocal = structNew() />
+	<cfset hocal.result = structNew() />
+	<cfset hocal.dsService = createObject("java", "coldfusion.server.ServiceFactory").DataSourceService />
 	<cftry>
-		<cfset local.result.valid = local.dsService.verifydatasource(arguments.dsn) />
+		<cfset hocal.result.valid = hocal.dsService.verifydatasource(arguments.dsn) />
 		<cfcatch>
-			<cfset local.result.valid = false />
-			<cfset local.result.errorType = cfcatch.type />
-			<cfset local.result.errorMessage = cfcatch.message />
-			<cfset local.result.errorDetail = cfcatch.detail />
+			<cfset hocal.result.valid = false />
+			<cfset hocal.result.errorType = cfcatch.type />
+			<cfset hocal.result.errorMessage = cfcatch.message />
+			<cfset hocal.result.errorDetail = cfcatch.detail />
 		</cfcatch>
 	</cftry>
-	<cfreturn local.result />
+	<cfreturn hocal.result />
 </cffunction>
