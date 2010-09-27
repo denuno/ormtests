@@ -31,6 +31,8 @@
 			</fileset>
 		</classpath>
 	</classloader>
+	<property name="dist.root.dir.abs" location="${dist.root.dir}" />
+	<antcontrib:var name="dist.root.dir" value="${dist.root.dir.abs}" />
 
 	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpath="${cfdistro.basedir}/lib/xmltask-v1.16.1.jar" />
 	<taskdef name="sshsession" classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHSession"  classpath="/workspace/cfdistro/src/cfdistro/java/sshtunnel/lib/com.jcraft.jsch_0.1.41.v200903070017.jar;${cfdistro.basedir}/ant/lib/ant-jsch.jar" />
@@ -180,7 +182,6 @@
 	<property name="ext.uri" value="http://subversion.assembla.com/svn/cfdistro/trunk/cfdistro/ext" />
 	<property name="creds.token.file" value="${basedir}/creds.txt"/>
 
-	<property name="server.type" value="runwar" />
 	<property name="dist.zip.file" value="${dist.dir}/${distro.name}.zip" />
 	<property name="jps.executable" value="${java.home}/bin/jps" />
 	

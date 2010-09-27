@@ -1,13 +1,9 @@
 <?xml version="1.0"?>
-<project default="runTests" xmlns:antcontrib="antlib:net.sf.antcontrib">
+<project name="httpd-ant" default="runTests" xmlns:antcontrib="antlib:net.sf.antcontrib">
 
-	<property name="httpd.distro.conf.dir" value="${dist.root.dir}/conf/httpd" />
-	<property name="httpd.cfml.host.pub" value="${dist.root.dir}/pub" />
-	
-	<property name="httpd.host.ip" value="${server.ip}" />
-	<property name="httpd.host.name" value="" />
-	<property name="httpd.host.documentroot" value="" />
-	
+	<dirname property="httpd-ant.basedir" file="${ant.file.httpd-ant}" />
+	<property file="${httpd-ant.basedir}/httpd.properties"/>
+		
 	<!-- <typedef name="numgt" classpath="${ext.dir}/ant-lib/den.ant.conditions.jar" 
 		classname="den.ant.conditions.NumGreaterThan" /> <target name="checkResinVersion"> 
 		<condition property="resin4"> <not> <numgt arg1="${resin.version}" arg2="4" 
@@ -29,7 +25,7 @@
 		<antcontrib:if>
 			<available file="${httpd.conf.file}"/>
 			<then>
-				<echo message="httpd: using ${httpd.conf.file}"/> 
+				<echo message="httpd.conf.file: using ${httpd.conf.file}"/> 
 			</then>
 			<else>
 				<fail message="httpd.conf file not found.  Specify it with property: httpd.conf.file"/>
@@ -61,14 +57,20 @@
 		<antcontrib:propertyregex override="false" property="httpd.log.dir" input="${httpd.conf.file.content}"
 			regexp="${line.separator}ErrorLog\s+[&quot;](.*[\\|/])" select="\1"/>
 		<antcontrib:propertyregex override="true" property="httpd.log.dir" input="${httpd.log.dir}"
-			regexp="(.*)[\\|/]?" select="\1"/>
+			regexp="(.*)[\\|/]$" select="\1"/>
+		<echo message="${httpd.log.dir}"/>
 		<antcontrib:propertyregex override="false" property="httpd.serverroot" input="${httpd.conf.file.content}"
 			regexp="${line.separator}ServerRoot\s+[&quot;](.*)[&quot;]" select="\1"/>
 		<echo message="httpd.serverroot: httpd server root:${httpd.serverroot}"/>
-		<echo message="httpd.cfml.conf.file: httpd cfml conf file (${server.host}): using ${httpd.cfml.conf.file}"/> 
+		<echo message="httpd.cfml.conf.file: httpd cfml conf file (${server.host}): using ${httpd.cfml.conf.file} -- Existing:"/> 
+		<loadfile property="httpd.conf.cfml.content" srcFile="${httpd.cfml.conf.file}" failonerror="false">
+		</loadfile>
+		<echo message="${httpd.conf.cfml.content}" />
 		<echo message="httpd.vhosts.dir: httpd vhosts dir:  ${httpd.vhosts.dir}"/> 
-		<property name="httpd.cfml.host.dir" value="${httpd.vhosts.dir}/${distro.name}" />
-		<echo message="httpd.cfml.host.dir: host config files will be in: ${httpd.cfml.host.dir}"/>
+		<property name="httpd.host.dir" value="${httpd.vhosts.dir}/${distro.name}" />
+		<property name="httpd.host.dir.abs" location="${httpd.host.dir}" />
+		<antcontrib:var name="httpd.host.dir" value="${httpd.host.dir.abs}" />
+		<echo message="httpd.host.dir: host config files will be in: ${httpd.host.dir}"/>
 		<property name="httpd.distro.conf.name" value="${distro.name}.conf" />
 		<antcontrib:if>
 			<available file="${httpd.distro.conf.dir}"/>
@@ -79,30 +81,34 @@
 				<fail message="source conf dir (${httpd.distro.conf.dir}) not found.  Specify it with property: httpd.distro.conf.dir"/>
 			</else>
 		</antcontrib:if>
-		<property name="httpd.conf.host.pub.abs" location="${httpd.cfml.host.pub}" />
-		<antcontrib:var name="httpd.cfml.host.pub" value="${httpd.conf.host.pub.abs}" />
+		<property name="httpd.host.documentroot.abs" location="${httpd.host.documentroot}" />
+		<antcontrib:var name="httpd.host.documentroot" value="${httpd.host.documentroot.abs}" />
 		<antcontrib:if>
-			<available file="${httpd.cfml.host.pub}" type="dir"/>
+			<available file="${httpd.host.documentroot}" type="dir"/>
 			<then>
-				<echo message="httpd.cfml.host.pub: host pub dir (DocumentRoot): ${httpd.cfml.host.pub}"/> 
+				<echo message="httpd.host.documentroot: host pub dir (DocumentRoot): ${httpd.host.documentroot}"/> 
 			</then>
 			<else>
-				<fail message="host pub dir or DocumentRoot (${httpd.cfml.host.pub}) not found.  Specify it with property: httpd.cfml.host.pub"/>
+				<echo message="WARNING: host pub dir or DocumentRoot (${httpd.host.documentroot}) not found.  Specify it with property: httpd.host.documentroot"/>
 			</else>
 		</antcontrib:if>
 		<antcontrib:if>
 			<available file="${httpd.distro.conf.dir}/${httpd.distro.conf.name}"/>
 			<then>
-				<echo message="httpd.distro.conf.name: using conf: ${httpd.distro.conf.name}"/> 
+				<echo message="httpd.distro.conf.name: using conf template: ${httpd.distro.conf.name}"/>
+				<property name="httpd.host.conf.name" value="${httpd.distro.conf.name}"/>
+				<!--
+				<antcontrib:propertyregex property="httpd.host.conf.name" input="${httpd.distro.conf.name}" regexp="(.*)\.conf" select="\1-${build.type}.conf" />
+				-->
+				<echo message="httpd.conf.name: ${httpd.host.conf.name}"/>
 			</then>
 			<else>
 				<fail message="host conf file name (name only, not the full path) ${httpd.distro.conf.name} not found.  Specify it with property: httpd.distro.conf.name (and put it in ${httpd.distro.conf.dir})"/>
 			</else>
 		</antcontrib:if>
-		
 	</target>
-	
-	<target name="httpd.cfml.host.add" depends="httpd.init,needsProxyAjpModules,needsProxyHttpModules" description="adds vhost to httpd">
+
+	<target name="httpd.cfml.install" depends="httpd.init,needsProxyAjpModules,needsProxyHttpModules" description="adds a link from httpd.conf to httpd.conf.cfml (${httpd.conf.cfml})">
 		<loadfile property="httpd.conf.cfml.included" srcFile="${httpd.conf.file}">
 			<filterchain>
 				<linecontainsregexp>
@@ -127,36 +133,51 @@
 			</else>
 		</antcontrib:if>
 		<echo file="${httpd.cfml.conf.file}" append="true"><![CDATA[]]></echo>
-		<echo message="replacing token values from files in ${httpd.distro.conf.dir} while copying to ${httpd.cfml.host.dir}" />
-		<copy todir="${httpd.cfml.host.dir}" verbose="false" overwrite="true">
+	</target>
+	
+	<target name="httpd.host.build" depends="httpd.init" description="adds vhost to httpd">
+		<loadfile property="httpd.conf.cfml.included" srcFile="${httpd.conf.file}">
 			<filterchain>
-				<replacetokens>
-					<token key="distro.name" value="${distro.name}" />
-					<token key="war.contextpath" value="${war.contextpath}" />
-					<token key="server.host" value="${server.host}" />
-					<token key="server.port.http" value="${server.port.http}" />
-					<token key="server.port.ajp" value="${server.port.ajp}" />
-					<token key="httpd.cfml.host.dir" value="${httpd.cfml.host.dir}" />
-					<token key="httpd.log.dir" value="${httpd.log.dir}" />
-					<token key="httpd.log.dir" value="${httpd.log.dir}" />
-					<token key="dist.root.dir" value="${dist.root.dir}" />
-					<token key="httpd.cfml.host.pub" value="${httpd.cfml.host.pub}" />
-					<token key="basedir" value="${basedir}" />
-				</replacetokens>
+				<linecontainsregexp>
+					<regexp pattern="Include.*httpd-cfml.conf.[\s]?" />
+				</linecontainsregexp>
+			</filterchain>
+		</loadfile>
+		<antcontrib:if>
+			<isset property="httpd.conf.cfml.included"/>
+			<then/>
+			<else>
+				<echo message="WARNING: did not detect include of ${httpd.cfml.conf.file} in ${httpd.conf.file}" />
+			</else>
+		</antcontrib:if>
+		<property name="httpd.generated.dir" value="httpd.host.dir" />
+		<echo message="replacing token values from files in ${httpd.distro.conf.dir} while copying to ${httpd.generated.dir}" />
+		<tempfile property="temp.file"/>
+		<echoproperties destfile="${temp.file}"/>
+		<copy todir="${httpd.generated.dir}" verbose="false" overwrite="true">
+			<filterchain>
+				<filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
+					<param type="propertiesfile" value="${temp.file}" />
+				</filterreader>
 				<!-- <filterreader classname="org.apache.tools.ant.filters.ExpandProperties"/> -->
 			</filterchain>
 			<fileset dir="${httpd.distro.conf.dir}" includes="**" />
 		</copy>
-		<echo message="adding ${httpd.cfml.host.dir}/${httpd.distro.conf.name} include directive to ${httpd.cfml.conf.file}" />
-		<replaceregexp byline="false"
-			file="${httpd.cfml.conf.file}" flags="m">
-			<regexp pattern="Include.*${httpd.distro.conf.name}.[\s]?" />
-			<substitution expression="" />
-		</replaceregexp>
-		<echo file="${httpd.cfml.conf.file}" append="true"><![CDATA[Include "${httpd.cfml.host.dir}/${httpd.distro.conf.name}"]]>${line.separator}</echo>
+		<delete file="${temp.file}"/>
+		<move file="${httpd.generated.dir}/${httpd.distro.conf.name}" tofile="${httpd.generated.dir}/${httpd.host.conf.name}" overwrite="true" />
 	</target>
 
-	<target name="httpd.cfml.remove" description="removes httpd vhost" depends="httpd.init">
+	<target name="httpd.host.install" depends="httpd.init" description="adds vhost to httpd">
+		<echo message="adding ${httpd.host.dir}/${httpd.host.conf.name} include directive to ${httpd.cfml.conf.file}" />
+		<replaceregexp byline="false"
+			file="${httpd.cfml.conf.file}" flags="m">
+			<regexp pattern="Include.*${httpd.host.conf.name}.[\s]?" />
+			<substitution expression="" />
+		</replaceregexp>
+		<echo file="${httpd.cfml.conf.file}" append="true"><![CDATA[Include "${httpd.host.dir}/${httpd.host.conf.name}"]]>${line.separator}</echo>
+	</target>
+
+	<target name="httpd.cfml.uninstall" description="removes httpd vhost" depends="httpd.init">
 		<echo message="removing include in ${httpd.conf.file}" />
 		<replaceregexp byline="false" file="${httpd.conf.file}"
 			flags="m">
@@ -166,16 +187,19 @@
 		<delete file="${httpd.cfml.conf.file}"/>
 	</target>
 
-	<target name="httpd.cfml.host.remove" description="removes httpd vhost" depends="httpd.init">
+	<target name="httpd.host.uninstall" description="removes httpd vhost Include directive" depends="httpd.init">
 		<echo message="removing host ${httpd.distro.conf.name}" />
 		<replaceregexp byline="false"
 			file="${httpd.cfml.conf.file}" flags="m">
 			<regexp pattern="Include.*${httpd.distro.conf.name}.[\s]?" />
 			<substitution expression="" />
 		</replaceregexp>
-		<delete dir="httpd.cfml.host.dir"/>
 	</target>
 	
+	<target name="httpd.host.delete" description="deletes httpd vhost files" depends="httpd.host.uninstall">
+		<echo message="deleting host dir ${httpd.distro.conf.name}" />
+		<delete dir="httpd.host.dir"/>
+	</target>	
 	
 	<target name="httpd.check-proxy-modules" depends="httpd.init">
 		<loadfile property="modProxyMatches" srcFile="${httpd.conf.file}">
