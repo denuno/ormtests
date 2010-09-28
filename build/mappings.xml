@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <mappings>
-<mapping physical="/workspace/ormtests/src/mxunit" virtual="/mxunit"/>
-<mapping physical="/workspace/ormtests/src/ormtests" virtual="/ormtests"/>
+  <mapping physical="@src.dir@/mxunit" virtual="/mxunit"/>
+  <mapping physical="@src.dir@/ormtests" virtual="/ormtests"/>
 <mapping physical="/workspace/ormtests/build/../tests" virtual="/tests"/>
 <mapping physical="/workspace/ormtests/build/../pub" virtual="/pub"/>
-<mapping physical="/workspace/ormtests/src/cfdistro/org" virtual="/org"/>
 </mappings>

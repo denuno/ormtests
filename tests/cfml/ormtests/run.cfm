@@ -8,26 +8,26 @@
 <cfset dir = expandPath("/tests/cfml/ormtests/#dirname#/") />
 <cfset DTS = createObject("component","mxunit.runner.DirectoryTestSuite") />
 <cfset excludes = "" />
-<cfinvoke component="#DTS#" 
+<cfinvoke component="#DTS#"
 	method="run"
-	directory="#dir#" 
-	recurse="true" 
+	directory="#dir#"
+	recurse="true"
 	excludes="#excludes#"
-	returnvariable="Results"
+	returnvariable="results"
 	componentpath="tests.cfml.ormtests.#dirname#">
 <cfsetting showdebugoutput="true">
 <cfoutput>
 	<cfsavecontent variable="recenthtml">
 		<cfoutput>
 			<h3>
-				#dir# - #dirname# 
+				#dir# - #dirname#
 			</h3>
 			<a href="http://github.com/denuno/ormtests/tree/master/tests/cfml/ormtests/#dirname#/" target="_blank">View on GitHub</a>
 		</cfoutput>
 		<cfif NOT StructIsEmpty(DTS.getCatastrophicErrors())>
 			<cfdump var="#DTS.getCatastrophicErrors()#" expand="false" label="#StructCount(DTS.getCatastrophicErrors())# Catastrophic Errors" />
 		</cfif>
-		#results.getResultsOutput(URL.output)#
+		<pre>#results.getResultsOutput('text')#</pre>
 	</cfsavecontent>
 </cfoutput>
 <cfif NOT url.quiet>

@@ -1,6 +1,7 @@
 <project name="cfdistro" default="help" basedir="./" xmlns:antcontrib="antlib:net.sf.antcontrib">
 
 	<dirname property="cfdistro.basedir" file="${ant.file.cfdistro}" />
+	<property name="dist.root.dir" location="../" />
 	<property file="${cfdistro.basedir}/i18n/en_us.properties" prefix="i18n"/>
 
 	<property name="build.type" value="localdev" />
@@ -147,10 +148,10 @@
 
 
 	<property name="distro.name" value="cfdistro" />
+	<property name="cfdistro.debug" value="false" />
 	<property name="default.cfengine" value="railo" />
 	<property name="src.dir" location="../src" />
 	<property name="dist.dir" location="./dist" />
-	<property name="dist.root.dir" location="../" />
 	<property name="pub.dir" location="../pub" />
 	<property name="docs.dir" location="../docs" />
 	<property name="tests.dir" location="../tests" />
@@ -158,7 +159,6 @@
 	<property name="temp.dir" location="./temp" />
 	<property name="log.dir" location="${temp.dir}" />
 	<property name="build.type" location="localdev" />
-
 	<property name="war.name" value="${distro.name}" />
 	<property name="war.contextpath" value="/${war.name}" />
 	<property name="war.target.dir" value="${temp.dir}/${war.name}.war" />
@@ -185,7 +185,8 @@
 	<property name="dist.zip.file" value="${dist.dir}/${distro.name}.zip" />
 	<property name="jps.executable" value="${java.home}/bin/jps" />
 	
-	
+	<property name="cfmlexception.install" value="false" />
+		
 	<requires-ext resource="${ext.dir}/dtd/web-app_2_3.dtd" />
 	<requires-ext resource="${ext.dir}/dtd/urlrewrite3.2.dtd" />
 	<xmlcatalog id="commonDTDs">
@@ -224,6 +225,31 @@
 			<echo message="valueA is greater than valueB" />
 		</target>
 	-->
+
+	<antcontrib:switch value="${default.cfengine}">
+	  <case value="railo">
+		<property name="cfmlServletName" value="CFMLServlet" />
+	  </case>
+	  <case value="acf">
+		<property name="cfmlServletName" value="CfmServlet" />
+	  </case>
+	  <case value="obd">
+		<property name="cfmlServletName" value="cfmServlet" />
+	  </case>
+	  <default>
+	  	<fail message="Um, the engine '${default.cfengine}' is unknown to me, esse!" />
+	  </default>
+	</antcontrib:switch>
+
+	<antcontrib:if>
+		<equals arg1="${proxy.enabled}" arg2="true" />
+		<then>
+			<echo>Proxy is enabled: ${proxy.host}:${proxy.port}</echo>
+			<setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}"
+			      proxyuser="${proxy.user}" proxypassword="${proxy.pass}"/>
+		</then>
+	</antcontrib:if>
+	
 	<target name="clean" description="cleans project">
 		<sanitizeContextPath/>
 		<delete dir="${temp.dir}" />
@@ -231,9 +257,9 @@
 	</target>
 
 	<target name="jar.war">
-		<delete dir="${dist.dir}" />
-		<mkdir dir="${dist.dir}" />
-		<jar jarfile="${dist.dir}/${war.name}.war" basedir="${war.target.dir}" />
+		<delete dir="${dist.dir}/compressed" />
+		<mkdir dir="${dist.dir}/compressed" />
+		<jar jarfile="${dist.dir}/compressed/${war.name}.war" basedir="${war.target.dir}" />
 	</target>
 
 	<target name="copy.temp.to.dist">
@@ -270,8 +296,7 @@
 		</echo>
 		<xmltask source="${target.dir}/.project" dest="${target.dir}/.project" outputter="simple" />
 		<copy todir="${target.dir}/build/cfdistro" verbose="false">
-			<fileset dir="${cfdistro.basedir}/" includes="*.*" />
-			<fileset dir="${cfdistro.basedir}/" includes="lib/**,ext/railo/3.1/**,ext/jboss/**,ext/urlrewritefilter/**,org/**,ant/**,installer/**,java/**" />
+			<fileset dir="${cfdistro.basedir}/" excludes="ext/**" />
 		</copy>
 		<property name="skeleton.dir" value="${cfdistro.basedir}/skeleton/default"/>
 		<copy todir="${target.dir}" verbose="false">
@@ -297,7 +322,10 @@
 		<antcontrib:runtarget target="${default.cfengine}.add.libs" />
 		<antcontrib:runtarget target="${default.cfengine}.scheduledtasks.build" />
 		<antcontrib:runtarget target="${default.cfengine}.set.log.dir" />
+		<antcontrib:runtarget target="${default.cfengine}.set.debug" />
+		<antcontrib:runtarget target="${default.cfengine}.set.inspect.templates" />
 		<antcontrib:runtarget target="cfantrunner.install" />
+		<antcontrib:runtarget target="cfmlexception.install" />		
 		<!-- tomcat -->
 		<mkdir dir="${war.target.dir}/META-INF" />
 		<echo file="${war.target.dir}/META-INF/context.xml"><![CDATA[<Context path="${war.contextpath}" override="true" docBase="./" />]]></echo>
@@ -349,31 +377,41 @@
 		<antcontrib:runtarget target="startscripts.create" />
 	</target>
 
+	<target name="cfmlexception.install">
+		<antcontrib:if>
+			<equals arg1="${cfmlexception.install}" arg2="true" />
+			<then>
+				<requires-ext resource="${ext.dir}/cfmlexception"/>
+				<copy todir="${src.dir}/cfmlexception" verbose="false">
+					<fileset dir="${ext.dir}/cfmlexception" />
+				</copy>
+				<mapping virtual="/cfmlexception" physical="@src.dir@/cfmlexception" />
+			  	<error-template path="/cfmlexception/error.cfm" type="404"/>
+			  	<error-template path="/cfmlexception/error.cfm" type="500"/>
+			</then>
+		</antcontrib:if>
+	</target>
+
 	<target name="build" depends="build.init">
 		<antcontrib:runtarget target="war.init" />
 		<antcontrib:runtarget target="servlet.mappings.update" />
-		<antcontrib:runtarget target="startscripts.create" />
 		<requires-ext resource="${ext.railo.dir}/error.cfm"/>
 		<antcontrib:switch value="${build.type}">
 		  <case value="localdev">
-			<copy file="${ext.railo.dir}/error.cfm" todir="${war.target.dir}/WEB-INF/lib/railo-server/context/library/tag" overwrite="true" />
-			<cache-template when="always" />
-		  	<error-template path="/WEB-INF/lib/railo-server/context/library/tag/error.cfm"/>
 			<requires-ext resource="${ext.dir}/cfeclipse" />
 			<addlibs from="${ext.dir}/cfeclipse" />
+			<property name="cfmlengine.inspect.templates" value="always" />
 		  </case>
 		  <case value="dev">
-			<copy file="${ext.railo.dir}/error.cfm" todir="${war.target.dir}/WEB-INF/lib/railo-server/context/library/tag" overwrite="true" />
-			<cache-template when="always" />
-		  	<error-template path="/WEB-INF/lib/railo-server/context/library/tag/error.cfm"/>
+			<property name="cfmlengine.inspect.templates" value="once" />
 		  </case>
 		  <case value="qa">
 			<property name="copy.mappings.to.src" value="true"/>
-			<cache-template when="never" />
+			<property name="cfmlengine.inspect.templates" value="never" />
 		  </case>
 		  <case value="prod">
 			<property name="copy.mappings.to.src" value="true"/>
-			<cache-template when="never" />
+			<property name="cfmlengine.inspect.templates" value="never" />
 		  </case>
 		  <default>
 		    <echo message="Um, the build type '${build.type}' is unknown to me, esse!" />
@@ -432,6 +470,7 @@
 			<path>
 				<dirset dir="${src.dir}">
 					<include name="*" />
+					<exclude name="**/.git/**"/>
 				</dirset>
 			</path>
 			<sequential>
@@ -639,38 +678,19 @@
 		</sequential>
 	</macrodef>
 
-	<macrodef name="cache-template">
-		<attribute name="when" default="always" />
-		<sequential>
-			<antcontrib:switch value="${default.cfengine}">
-			  <case value="railo">
-				<railo-cache-template when="@{when}" />
-			  </case>
-			  <case value="acf">
-				<acf-cache-template when="@{when}" />
-			  </case>
-			  <case value="obd">
-				<obd-cache-template when="@{when}" />
-			  </case>
-			  <default>
-			    <echo message="Um, the cfml engine '${default.cfengine}' is unknown to me, esse!" />
-			  </default>
-			</antcontrib:switch>
-		</sequential>
-	</macrodef>	
-
 	<macrodef name="error-template">
 		<attribute name="path"/>
+		<attribute name="type" default="500"/>
 		<sequential>
 			<antcontrib:switch value="${default.cfengine}">
 			  <case value="railo">
-				<railo-error-template path="@{path}" />
+				<railo-error-template path="@{path}" type="@{type}" />
 			  </case>
 			  <case value="acf">
-				<acf-error-template path="@{path}" />
+				<acf-error-template path="@{path}" type="@{type}" />
 			  </case>
 			  <case value="obd">
-				<obd-error-template path="@{path}" />
+				<obd-error-template path="@{path}" type="@{type}" />
 			  </case>
 			  <default>
 			    <echo message="Um, the cfml engine '${default.cfengine}' is unknown to me, esse!" />
@@ -679,6 +699,40 @@
 		</sequential>
 	</macrodef>	
 
+	<target name="get.jdk5.location">
+		<antcontrib:for list="C:/Program Files/Java/jdk1.5.0_22/,/usr/lib/jvm/java-5-sun/,/usr/lib/jvm/java-5-sun-1.5.0.22/,/usr/lib/jvm/jdk1.5.0_22/,/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/,/opt/java/jdk1.5,/opt/java/jdk1.5.0_22/,/usr/java/jdk1.5.0_22/" param="confdir">
+		  <sequential>
+			<antcontrib:if>
+				<available file="@{confdir}" type="dir"/>
+				<then>
+					<property name="jdk5.home" value="@{confdir}" />
+				</then>
+			</antcontrib:if>
+		  </sequential>
+		</antcontrib:for>
+		<antcontrib:if>
+			<isset property="jdk5.home"/>
+			<then>
+				<echo message="jdk5.home: ${jdk5.home}" />
+			</then>
+			<else>
+				<echo message="jdk5.home not set, and couldn't be determined.  If you are on OS X Snow Leopard, or Windows 7, you may need to install it esspecial, as the default is now 1.6." />
+			</else>
+		</antcontrib:if>
+		<input message="Please enter path to 1.5 JDK: " addproperty="jdk5.home" />
+		<antcontrib:if>
+			<or>
+				<available file="${jdk5.home}/bin/javac" type="file"/>
+				<available file="${jdk5.home}/bin/javac.exe" type="file"/>
+			</or>
+			<then>
+			</then>
+			<else>
+				<fail message="jdk5.home not set, and couldn't be determined.  If you are on OS X Snow Leopard, or Windows 7, you may need to install it esspecial, as the default is now 1.6." />
+			</else>
+		</antcontrib:if>
+	</target>
+	
 	<target name="exists.mappings.xml">
 		<sanitizeContextPath/>
 		<property name="src.dir.absolute" location="${src.dir}" />
@@ -1011,6 +1065,7 @@
 		</copy>
 		<antcontrib:var name="dist.script.sh" value="${dist.dir}/${distro.name}/${distro.name}.sh" />
 		<antcontrib:var name="dist.script.bat" value="${dist.dir}/${distro.name}/${distro.name}.bat" />
+		<antcontrib:var name="startscripts.create" value="true" />
 		<antcontrib:runtarget target="startscripts.create" />
 		<fixcrlf srcdir="${dist.dir}" includes="**/*.bat" eol="crlf" />
 		<fixcrlf srcdir="${dist.dir}/${distro.name}/build" includes="**/*.xml" eol="crlf" />
@@ -1018,28 +1073,6 @@
 		<chmod file="${dist.dir}/${distro.name}/build/cfdistro/ant/bin/ant" perm="ugo+rx"/>
 		<!-- use our macrodef that uses OS zip executable so we retain file permissions -->
 		<zipdir destfile="${dist.dir}/${distro.name}.zip" sourcedir="${dist.dir}/"/>
-	</target>
-
-	<target name="cfdistro.executable">
-		<echo file="${basedir}/cfdistro.sh"><![CDATA[#! /bin/sh
-export ANT_HOME="${cfdistro.basedir}/ant/"
-${cfdistro.basedir}/ant/bin/ant -f build.xml $*
-		]]>
-		</echo>
-		<chmod file="${basedir}/cfdistro.sh" perm="ugo+rx"/>
-		<echo file="${basedir}/cfdistro.bat"><![CDATA[@echo off
-if "%1" == "" goto error
-set ANT_HOME=%CD%\cfdistro\ant\
-call %CD%\cfdistro\ant\bin\ant.bat -f %CD%\build.xml %1
-goto end
-:error
-echo usage:
-echo cfdistro.bat start
-echo cfdistro.bat stop
-:end
-		]]>
-		</echo>
-
 	</target>
 
 </project>

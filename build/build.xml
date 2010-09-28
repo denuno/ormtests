@@ -27,8 +27,6 @@
 			</then>
 		</antcontrib:if>
 		<!--
-		<fileservlet servletname="fileServlet" directory="${src.dir}/../pub"
-			urlpattern="/pub/*" />
 			getting "Failed to specify text in replace" means you need to escape
 			& like so: &amp;amp;
 		-->
@@ -55,6 +53,8 @@
 					verbose="true" />
 			</then>
 		</antcontrib:if>
+		<fileservlet servletname="fileServlet" directory="${src.dir}/mxunit"
+			urlpattern="mxunit/*" />
 	</target>
 
 	<target name="build.localdev.start.launch">

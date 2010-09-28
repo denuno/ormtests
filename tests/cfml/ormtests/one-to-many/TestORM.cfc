@@ -55,7 +55,7 @@
 		<cfset testSaveEntry() />
 		<cfset var blogentry = entityload("Entry",1,true) />
 		<cfsavecontent variable="wee">
-			<cfdump var="#entityload("Entry",1,true)#"> 
+			<cfdump var="#entityload("Entry",1,true)#">
 			<cfdump var="#getmetadata(blogentry)#" />
 			<cfdump var="#EntityToQuery(blogentry.getComments())#" />
 		</cfsavecontent>
