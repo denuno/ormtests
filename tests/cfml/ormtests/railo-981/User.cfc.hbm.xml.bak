@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-mapping>
+  <!--
+source:/home/phil/d_drive/wwwroot/testOrm/User.cfc
+compilation-time:{ts '2010-09-27 12:15:50'}
+-->
+  <class entity-name="User" lazy="true" node="User" table="users">
+    <id name="userid" type="integer">
+      <column name="userid"/>
+      <generator class="native"/>
+    </id>
+    <property name="firstName" type="string">
+      <column name="firstName"/>
+    </property>
+    <property name="email" type="string">
+      <column name="email"/>
+    </property>
+  </class>
+</hibernate-mapping>
