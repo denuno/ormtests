@@ -218,6 +218,8 @@
 		</cfif>
 
 		<!--- climb the parent tree until we hit a framework template (i.e. TestCase) --->
+		<cfdump var="#ThisComponentMetadata.Extends.Path#"><cfabort>
+
 		<cfif NOT cu.isFrameworkTemplate(ThisComponentMetadata.Extends.Path)>
 			<cfset tmpParentObj = createObject("component",ThisComponentMetadata.Extends.Name) />
 			<cfset a_parentMethods = tmpParentObj.getRunnableMethods() />
