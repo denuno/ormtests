@@ -1,18 +1,18 @@
-<cfsetting showdebugoutput="false" />
+<cfparam name="url.showdebugoutput" default="false">
+<cfsetting showdebugoutput="#url.showdebugoutput#" />
 
 <cfparam name="url.test" default="" />
 <cfparam name="url.componentPath" default="" />
-<cfparam name="url.output" default="extjs" />
+
 <cfset pathBase = '../' />
-<cfset title = 'Runner' />
+<cfset title = '#url.test# - Runner' />
 
-<cfinclude template="../resources/theme/header.cfm" />
+<cfinclude template="#pathBase#resources/theme/header.cfm" />
 
-<cfset scripts = arrayNew(1) />
+<cfset testToRun = url.test />
+
+<!--- Add the js for the runner --->
 <cfset arrayAppend(scripts, 'runner.js') />
-
-<cfset testIsPresent = cgi.path_info is not "" OR url.test is not "" />
-<cfset testToRun = iif(cgi.path_info is "", de(url.test), de(cgi.path_info)) />
 
 <cfoutput>
 	<form id="runnerForm" action="index.cfm" method="get">
@@ -24,7 +24,7 @@
 				</label>
 			</div>
 		</div>
-		
+
 		<div class="grid_4">
 			<div>
 				<label for="componentPath">
@@ -33,18 +33,18 @@
 				</label>
 			</div>
 		</div>
-		
+
 		<div class="grid_12 align-center">
-			<input type="submit" value="Run Tests">
-			<input type="reset" value="Clear" />
+			<input type="submit" value="Run Tests" id="btnRun">
+			<input type="reset" value="Clear" id="btnClear" />
 		</div>
-		
+
 		<div class="clear"><!-- clear --></div>
 	</form>
 </cfoutput>
-	
+
 <cfif testToRun NEQ "">
-	<cfinvoke component="HtmlRunner" method="run" test="#testToRun#" componentPath="#url.componentPath#" output="#url.output#" />
+	<cfinvoke component="HtmlRunner" method="run" test="#testToRun#" componentPath="#url.componentPath#" />
 </cfif>
 
-<cfinclude template="../resources/theme/footer.cfm" />
+<cfinclude template="#pathBase#resources/theme/footer.cfm" />

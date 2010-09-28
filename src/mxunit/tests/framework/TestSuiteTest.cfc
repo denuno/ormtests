@@ -10,7 +10,6 @@
      suites = testSuite.suites();
      //debug(suites["mxunit.tests.bugs.fixture.test-with_hyphen"]);
      methods = suites["mxunit.tests.bugs.fixture.test-with_hyphen"].methods;
-     debug(methods);
      assertEquals(3,arrayLen(methods),"Should be adding to methods element.");
     
     </cfscript>
@@ -33,6 +32,28 @@
 	</cfsilent>
       
 	</cffunction>
+
+	<cffunction name="settingMockingFrameworkInTestSuiteUsesThatFramework" access="public" returntype="void">
+  
+	  <cfscript>
+     testSuite = createObject("component","mxunit.framework.TestSuite").TestSuite();
+     testSuite.addAll("mxunit.tests.framework.fixture.Mocking");
+	 testSuite.setMockingFramework("ColdMock");
+	 testSuite.run();
+    </cfscript>
+      
+	</cffunction>
+	
+	<cffunction name="testAddOneTestMethod">    
+		<cfscript>
+		var testSuite = createObject("component","mxunit.framework.TestSuite").TestSuite();   
+		testSuite.add("mxunit.tests.framework.fixture.fixturetests.SomeRandomTest", "testThree");
+		results = testSuite.run();
+		assertEquals(1, arrayLen(results.results));      
+		</cfscript>   
+	</cffunction>
+
+
 	<cffunction name="setUp" access="public" returntype="void">
 
 	</cffunction>

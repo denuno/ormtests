@@ -69,16 +69,16 @@
 		<cfscript>
 
 			// Define the local scope.
-			var local = StructNew();
+			var LOCAL = StructNew();
 
 			// Create a default cell style object.
-			local.Style = ARGUMENTS.WorkBook.CreateCellStyle();
+			LOCAL.Style = ARGUMENTS.WorkBook.CreateCellStyle();
 
 			// Check for background color.
 			if (ListFindNoCase( "AQUA,BLACK,BLUE,BLUE_GREY,BRIGHT_GREEN,BROWN,CORAL,CORNFLOWER_BLUE,DARK_BLUE,DARK_GREEN,DARK_RED,DARK_TEAL,DARK_YELLOW,GOLD,GREEN,GREY_25_PERCENT,GREY_40_PERCENT,GREY_50_PERCENT,GREY_80_PERCENT,INDIGO,LAVENDER,LEMON_CHIFFON,LIGHT_BLUE,LIGHT_CORNFLOWER_BLUE,LIGHT_GREEN,LIGHT_ORANGE,LIGHT_TURQUOISE,LIGHT_YELLOW,LIME,MAROON,OLIVE_GREEN,ORANGE,ORCHID,PALE_BLUE,PINK,PLUM,RED,ROSE,ROYAL_BLUE,SEA_GREEN,SKY_BLUE,TAN,TEAL,TURQUOISE,VIOLET,WHITE,YELLOW", ARGUMENTS.CSS[ "background-color" ] )){
 
 				// Set the background color.
-				local.Style.SetFillForegroundColor(
+				LOCAL.Style.SetFillForegroundColor(
 					CreateObject(
 						"java",
 						"org.apache.poi.hssf.util.HSSFColor$#UCase( ARGUMENTS.CSS[ 'background-color' ] )#"
@@ -90,19 +90,19 @@
 				switch (ARGUMENTS.CSS[ "background-style" ]){
 
 					case "dots":
-						local.Style.SetFillPattern( local.Style.FINE_DOTS );
+						LOCAL.Style.SetFillPattern( LOCAL.Style.FINE_DOTS );
 						break;
 
 					case "vertical":
-						local.Style.SetFillPattern( local.Style.THIN_VERT_BANDS );
+						LOCAL.Style.SetFillPattern( LOCAL.Style.THIN_VERT_BANDS );
 						break;
 
 					case "horizontal":
-						local.Style.SetFillPattern( local.Style.THIN_HORZ_BANDS );
+						LOCAL.Style.SetFillPattern( LOCAL.Style.THIN_HORZ_BANDS );
 						break;
 
 					default:
-						local.Style.SetFillPattern( local.Style.SOLID_FOREGROUND );
+						LOCAL.Style.SetFillPattern( LOCAL.Style.SOLID_FOREGROUND );
 						break;
 
 				}
@@ -123,19 +123,19 @@
 						switch(Val( ARGUMENTS.CSS[ "border-bottom-width" ] )){
 
 							case 1:
-								local.Style.SetBorderBottom( local.Style.BORDER_HAIR );
+								LOCAL.Style.SetBorderBottom( LOCAL.Style.BORDER_HAIR );
 								break;
 
 							case 2:
-								local.Style.SetBorderBottom( local.Style.BORDER_THIN );
+								LOCAL.Style.SetBorderBottom( LOCAL.Style.BORDER_THIN );
 								break;
 
 							case 3:
-								local.Style.SetBorderBottom( local.Style.BORDER_MEDIUM );
+								LOCAL.Style.SetBorderBottom( LOCAL.Style.BORDER_MEDIUM );
 								break;
 
 							default:
-								local.Style.SetBorderBottom( local.Style.BORDER_THICK );
+								LOCAL.Style.SetBorderBottom( LOCAL.Style.BORDER_THICK );
 								break;
 
 						}
@@ -149,15 +149,15 @@
 						switch(Val( ARGUMENTS.CSS[ "border-bottom-width" ] )){
 
 							case 1:
-								local.Style.SetBorderBottom( local.Style.BORDER_DOTTED );
+								LOCAL.Style.SetBorderBottom( LOCAL.Style.BORDER_DOTTED );
 								break;
 
 							case 2:
-								local.Style.SetBorderBottom( local.Style.BORDER_DASH_DOT_DOT );
+								LOCAL.Style.SetBorderBottom( LOCAL.Style.BORDER_DASH_DOT_DOT );
 								break;
 
 							default:
-								local.Style.SetBorderBottom( local.Style.BORDER_MEDIUM_DASH_DOT_DOT );
+								LOCAL.Style.SetBorderBottom( LOCAL.Style.BORDER_MEDIUM_DASH_DOT_DOT );
 								break;
 
 						}
@@ -171,11 +171,11 @@
 						switch(Val( ARGUMENTS.CSS[ "border-bottom-width" ] )){
 
 							case 1:
-								local.Style.SetBorderBottom( local.Style.BORDER_DASHED );
+								LOCAL.Style.SetBorderBottom( LOCAL.Style.BORDER_DASHED );
 								break;
 
 							default:
-								local.Style.SetBorderBottom( local.Style.BORDER_MEDIUM_DASHED );
+								LOCAL.Style.SetBorderBottom( LOCAL.Style.BORDER_MEDIUM_DASHED );
 								break;
 
 						}
@@ -184,7 +184,7 @@
 
 					// There is only one option for double border.
 					case "double":
-						local.Style.SetBorderBottom( local.Style.BORDER_DOUBLE );
+						LOCAL.Style.SetBorderBottom( LOCAL.Style.BORDER_DOUBLE );
 						break;
 
 				}
@@ -192,7 +192,7 @@
 				// Check for a border color.
 				if (ListFindNoCase( "AQUA,BLACK,BLUE,BLUE_GREY,BRIGHT_GREEN,BROWN,CORAL,CORNFLOWER_BLUE,DARK_BLUE,DARK_GREEN,DARK_RED,DARK_TEAL,DARK_YELLOW,GOLD,GREEN,GREY_25_PERCENT,GREY_40_PERCENT,GREY_50_PERCENT,GREY_80_PERCENT,INDIGO,LAVENDER,LEMON_CHIFFON,LIGHT_BLUE,LIGHT_CORNFLOWER_BLUE,LIGHT_GREEN,LIGHT_ORANGE,LIGHT_TURQUOISE,LIGHT_YELLOW,LIME,MAROON,OLIVE_GREEN,ORANGE,ORCHID,PALE_BLUE,PINK,PLUM,RED,ROSE,ROYAL_BLUE,SEA_GREEN,SKY_BLUE,TAN,TEAL,TURQUOISE,VIOLET,WHITE,YELLOW", ARGUMENTS.CSS[ "border-bottom-color" ] )){
 
-					local.Style.SetBottomBorderColor(
+					LOCAL.Style.SetBottomBorderColor(
 						CreateObject(
 							"java",
 							"org.apache.poi.hssf.util.HSSFColor$#UCase( ARGUMENTS.CSS[ 'border-bottom-color' ] )#"
@@ -217,19 +217,19 @@
 						switch(Val( ARGUMENTS.CSS[ "border-left-width" ] )){
 
 							case 1:
-								local.Style.SetBorderLeft( local.Style.BORDER_HAIR );
+								LOCAL.Style.SetBorderLeft( LOCAL.Style.BORDER_HAIR );
 								break;
 
 							case 2:
-								local.Style.SetBorderLeft( local.Style.BORDER_THIN );
+								LOCAL.Style.SetBorderLeft( LOCAL.Style.BORDER_THIN );
 								break;
 
 							case 3:
-								local.Style.SetBorderLeft( local.Style.BORDER_MEDIUM );
+								LOCAL.Style.SetBorderLeft( LOCAL.Style.BORDER_MEDIUM );
 								break;
 
 							default:
-								local.Style.SetBorderLeft( local.Style.BORDER_THICK );
+								LOCAL.Style.SetBorderLeft( LOCAL.Style.BORDER_THICK );
 								break;
 
 						}
@@ -243,15 +243,15 @@
 						switch(Val( ARGUMENTS.CSS[ "border-left-width" ] )){
 
 							case 1:
-								local.Style.SetBorderLeft( local.Style.BORDER_DOTTED );
+								LOCAL.Style.SetBorderLeft( LOCAL.Style.BORDER_DOTTED );
 								break;
 
 							case 2:
-								local.Style.SetBorderLeft( local.Style.BORDER_DASH_DOT_DOT );
+								LOCAL.Style.SetBorderLeft( LOCAL.Style.BORDER_DASH_DOT_DOT );
 								break;
 
 							default:
-								local.Style.SetBorderLeft( local.Style.BORDER_MEDIUM_DASH_DOT_DOT );
+								LOCAL.Style.SetBorderLeft( LOCAL.Style.BORDER_MEDIUM_DASH_DOT_DOT );
 								break;
 
 						}
@@ -265,11 +265,11 @@
 						switch(Val( ARGUMENTS.CSS[ "border-left-width" ] )){
 
 							case 1:
-								local.Style.SetBorderLeft( local.Style.BORDER_DASHED );
+								LOCAL.Style.SetBorderLeft( LOCAL.Style.BORDER_DASHED );
 								break;
 
 							default:
-								local.Style.SetBorderLeft( local.Style.BORDER_MEDIUM_DASHED );
+								LOCAL.Style.SetBorderLeft( LOCAL.Style.BORDER_MEDIUM_DASHED );
 								break;
 
 						}
@@ -278,7 +278,7 @@
 
 					// There is only one option for double border.
 					case "double":
-						local.Style.SetBorderLeft( local.Style.BORDER_DOUBLE );
+						LOCAL.Style.SetBorderLeft( LOCAL.Style.BORDER_DOUBLE );
 						break;
 
 				}
@@ -286,7 +286,7 @@
 				// Check for a border color.
 				if (ListFindNoCase( "AQUA,BLACK,BLUE,BLUE_GREY,BRIGHT_GREEN,BROWN,CORAL,CORNFLOWER_BLUE,DARK_BLUE,DARK_GREEN,DARK_RED,DARK_TEAL,DARK_YELLOW,GOLD,GREEN,GREY_25_PERCENT,GREY_40_PERCENT,GREY_50_PERCENT,GREY_80_PERCENT,INDIGO,LAVENDER,LEMON_CHIFFON,LIGHT_BLUE,LIGHT_CORNFLOWER_BLUE,LIGHT_GREEN,LIGHT_ORANGE,LIGHT_TURQUOISE,LIGHT_YELLOW,LIME,MAROON,OLIVE_GREEN,ORANGE,ORCHID,PALE_BLUE,PINK,PLUM,RED,ROSE,ROYAL_BLUE,SEA_GREEN,SKY_BLUE,TAN,TEAL,TURQUOISE,VIOLET,WHITE,YELLOW", ARGUMENTS.CSS[ "border-left-color" ] )){
 
-					local.Style.SetLeftBorderColor(
+					LOCAL.Style.SetLeftBorderColor(
 						CreateObject(
 							"java",
 							"org.apache.poi.hssf.util.HSSFColor$#UCase( ARGUMENTS.CSS[ 'border-left-color' ] )#"
@@ -311,19 +311,19 @@
 						switch(Val( ARGUMENTS.CSS[ "border-right-width" ] )){
 
 							case 1:
-								local.Style.SetBorderRight( local.Style.BORDER_HAIR );
+								LOCAL.Style.SetBorderRight( LOCAL.Style.BORDER_HAIR );
 								break;
 
 							case 2:
-								local.Style.SetBorderRight( local.Style.BORDER_THIN );
+								LOCAL.Style.SetBorderRight( LOCAL.Style.BORDER_THIN );
 								break;
 
 							case 3:
-								local.Style.SetBorderRight( local.Style.BORDER_MEDIUM );
+								LOCAL.Style.SetBorderRight( LOCAL.Style.BORDER_MEDIUM );
 								break;
 
 							default:
-								local.Style.SetBorderRight( local.Style.BORDER_THICK );
+								LOCAL.Style.SetBorderRight( LOCAL.Style.BORDER_THICK );
 								break;
 
 						}
@@ -337,15 +337,15 @@
 						switch(Val( ARGUMENTS.CSS[ "border-right-width" ] )){
 
 							case 1:
-								local.Style.SetBorderRight( local.Style.BORDER_DOTTED );
+								LOCAL.Style.SetBorderRight( LOCAL.Style.BORDER_DOTTED );
 								break;
 
 							case 2:
-								local.Style.SetBorderRight( local.Style.BORDER_DASH_DOT_DOT );
+								LOCAL.Style.SetBorderRight( LOCAL.Style.BORDER_DASH_DOT_DOT );
 								break;
 
 							default:
-								local.Style.SetBorderRight( local.Style.BORDER_MEDIUM_DASH_DOT_DOT );
+								LOCAL.Style.SetBorderRight( LOCAL.Style.BORDER_MEDIUM_DASH_DOT_DOT );
 								break;
 
 						}
@@ -359,11 +359,11 @@
 						switch(Val( ARGUMENTS.CSS[ "border-right-width" ] )){
 
 							case 1:
-								local.Style.SetBorderRight( local.Style.BORDER_DASHED );
+								LOCAL.Style.SetBorderRight( LOCAL.Style.BORDER_DASHED );
 								break;
 
 							default:
-								local.Style.SetBorderRight( local.Style.BORDER_MEDIUM_DASHED );
+								LOCAL.Style.SetBorderRight( LOCAL.Style.BORDER_MEDIUM_DASHED );
 								break;
 
 						}
@@ -372,7 +372,7 @@
 
 					// There is only one option for double border.
 					case "double":
-						local.Style.SetBorderRight( local.Style.BORDER_DOUBLE );
+						LOCAL.Style.SetBorderRight( LOCAL.Style.BORDER_DOUBLE );
 						break;
 
 				}
@@ -380,7 +380,7 @@
 				// Check for a border color.
 				if (ListFindNoCase( "AQUA,BLACK,BLUE,BLUE_GREY,BRIGHT_GREEN,BROWN,CORAL,CORNFLOWER_BLUE,DARK_BLUE,DARK_GREEN,DARK_RED,DARK_TEAL,DARK_YELLOW,GOLD,GREEN,GREY_25_PERCENT,GREY_40_PERCENT,GREY_50_PERCENT,GREY_80_PERCENT,INDIGO,LAVENDER,LEMON_CHIFFON,LIGHT_BLUE,LIGHT_CORNFLOWER_BLUE,LIGHT_GREEN,LIGHT_ORANGE,LIGHT_TURQUOISE,LIGHT_YELLOW,LIME,MAROON,OLIVE_GREEN,ORANGE,ORCHID,PALE_BLUE,PINK,PLUM,RED,ROSE,ROYAL_BLUE,SEA_GREEN,SKY_BLUE,TAN,TEAL,TURQUOISE,VIOLET,WHITE,YELLOW", ARGUMENTS.CSS[ "border-right-color" ] )){
 
-					local.Style.SetRightBorderColor(
+					LOCAL.Style.SetRightBorderColor(
 						CreateObject(
 							"java",
 							"org.apache.poi.hssf.util.HSSFColor$#UCase( ARGUMENTS.CSS[ 'border-right-color' ] )#"
@@ -405,19 +405,19 @@
 						switch(Val( ARGUMENTS.CSS[ "border-top-width" ] )){
 
 							case 1:
-								local.Style.SetBorderTop( local.Style.BORDER_HAIR );
+								LOCAL.Style.SetBorderTop( LOCAL.Style.BORDER_HAIR );
 								break;
 
 							case 2:
-								local.Style.SetBorderTop( local.Style.BORDER_THIN );
+								LOCAL.Style.SetBorderTop( LOCAL.Style.BORDER_THIN );
 								break;
 
 							case 3:
-								local.Style.SetBorderTop( local.Style.BORDER_MEDIUM );
+								LOCAL.Style.SetBorderTop( LOCAL.Style.BORDER_MEDIUM );
 								break;
 
 							default:
-								local.Style.SetBorderTop( local.Style.BORDER_THICK );
+								LOCAL.Style.SetBorderTop( LOCAL.Style.BORDER_THICK );
 								break;
 
 						}
@@ -431,15 +431,15 @@
 						switch(Val( ARGUMENTS.CSS[ "border-top-width" ] )){
 
 							case 1:
-								local.Style.SetBorderTop( local.Style.BORDER_DOTTED );
+								LOCAL.Style.SetBorderTop( LOCAL.Style.BORDER_DOTTED );
 								break;
 
 							case 2:
-								local.Style.SetBorderTop( local.Style.BORDER_DASH_DOT_DOT );
+								LOCAL.Style.SetBorderTop( LOCAL.Style.BORDER_DASH_DOT_DOT );
 								break;
 
 							default:
-								local.Style.SetBorderTop( local.Style.BORDER_MEDIUM_DASH_DOT_DOT );
+								LOCAL.Style.SetBorderTop( LOCAL.Style.BORDER_MEDIUM_DASH_DOT_DOT );
 								break;
 
 						}
@@ -453,11 +453,11 @@
 						switch(Val( ARGUMENTS.CSS[ "border-top-width" ] )){
 
 							case 1:
-								local.Style.SetBorderTop( local.Style.BORDER_DASHED );
+								LOCAL.Style.SetBorderTop( LOCAL.Style.BORDER_DASHED );
 								break;
 
 							default:
-								local.Style.SetBorderTop( local.Style.BORDER_MEDIUM_DASHED );
+								LOCAL.Style.SetBorderTop( LOCAL.Style.BORDER_MEDIUM_DASHED );
 								break;
 
 						}
@@ -466,7 +466,7 @@
 
 					// There is only one option for double border.
 					case "double":
-						local.Style.SetBorderTop( local.Style.BORDER_DOUBLE );
+						LOCAL.Style.SetBorderTop( LOCAL.Style.BORDER_DOUBLE );
 						break;
 
 				}
@@ -474,7 +474,7 @@
 				// Check for a border color.
 				if (ListFindNoCase( "AQUA,BLACK,BLUE,BLUE_GREY,BRIGHT_GREEN,BROWN,CORAL,CORNFLOWER_BLUE,DARK_BLUE,DARK_GREEN,DARK_RED,DARK_TEAL,DARK_YELLOW,GOLD,GREEN,GREY_25_PERCENT,GREY_40_PERCENT,GREY_50_PERCENT,GREY_80_PERCENT,INDIGO,LAVENDER,LEMON_CHIFFON,LIGHT_BLUE,LIGHT_CORNFLOWER_BLUE,LIGHT_GREEN,LIGHT_ORANGE,LIGHT_TURQUOISE,LIGHT_YELLOW,LIME,MAROON,OLIVE_GREEN,ORANGE,ORCHID,PALE_BLUE,PINK,PLUM,RED,ROSE,ROYAL_BLUE,SEA_GREEN,SKY_BLUE,TAN,TEAL,TURQUOISE,VIOLET,WHITE,YELLOW", ARGUMENTS.CSS[ "border-top-color" ] )){
 
-					local.Style.SetTopBorderColor(
+					LOCAL.Style.SetTopBorderColor(
 						CreateObject(
 							"java",
 							"org.apache.poi.hssf.util.HSSFColor$#UCase( ARGUMENTS.CSS[ 'border-top-color' ] )#"
@@ -487,12 +487,12 @@
 
 
 			// Get a font object from the workbook.
-			local.Font = ARGUMENTS.WorkBook.CreateFont();
+			LOCAL.Font = ARGUMENTS.WorkBook.CreateFont();
 
 			// Check for color.
 			if (ListFindNoCase( "AQUA,BLACK,BLUE,BLUE_GREY,BRIGHT_GREEN,BROWN,CORAL,CORNFLOWER_BLUE,DARK_BLUE,DARK_GREEN,DARK_RED,DARK_TEAL,DARK_YELLOW,GOLD,GREEN,GREY_25_PERCENT,GREY_40_PERCENT,GREY_50_PERCENT,GREY_80_PERCENT,INDIGO,LAVENDER,LEMON_CHIFFON,LIGHT_BLUE,LIGHT_CORNFLOWER_BLUE,LIGHT_GREEN,LIGHT_ORANGE,LIGHT_TURQUOISE,LIGHT_YELLOW,LIME,MAROON,OLIVE_GREEN,ORANGE,ORCHID,PALE_BLUE,PINK,PLUM,RED,ROSE,ROYAL_BLUE,SEA_GREEN,SKY_BLUE,TAN,TEAL,TURQUOISE,VIOLET,WHITE,YELLOW", ARGUMENTS.CSS[ "color" ] )){
 
-				local.Font.SetColor(
+				LOCAL.Font.SetColor(
 					CreateObject(
 						"java",
 						"org.apache.poi.hssf.util.HSSFColor$#UCase( ARGUMENTS.CSS[ 'color' ] )#"
@@ -505,7 +505,7 @@
 			// Check for font family.
 			if (Len( ARGUMENTS.CSS[ "font-family" ] )){
 
-				local.Font.SetFontName(
+				LOCAL.Font.SetFontName(
 					JavaCast( "string", ARGUMENTS.CSS[ "font-family" ] )
 					);
 
@@ -515,7 +515,7 @@
 			// Check for font size.
 			if (Val( ARGUMENTS.CSS[ "font-size" ] )){
 
-				local.Font.SetFontHeightInPoints(
+				LOCAL.Font.SetFontHeightInPoints(
 					JavaCast( "int", Val( ARGUMENTS.CSS[ "font-size" ] ) )
 					);
 
@@ -529,7 +529,7 @@
 				switch (ARGUMENTS.CSS[ "font-style" ]){
 
 					case "italic":
-						local.Font.SetItalic(
+						LOCAL.Font.SetItalic(
 							JavaCast( "boolean", true )
 							);
 						break;
@@ -546,8 +546,8 @@
 				switch (ARGUMENTS.CSS[ "font-weight" ]){
 
 					case "bold":
-						local.Font.SetBoldWeight(
-							local.Font.BOLDWEIGHT_BOLD
+						LOCAL.Font.SetBoldWeight(
+							LOCAL.Font.BOLDWEIGHT_BOLD
 							);
 						break;
 
@@ -557,22 +557,22 @@
 
 
 			// Apply the font to the style object.
-			local.Style.SetFont( local.Font );
+			LOCAL.Style.SetFont( LOCAL.Font );
 
 
 			// Check for cell text alignment.
 			switch (ARGUMENTS.CSS[ "text-align" ]){
 
 				case "right":
-					local.Style.SetAlignment( local.Style.ALIGN_RIGHT );
+					LOCAL.Style.SetAlignment( LOCAL.Style.ALIGN_RIGHT );
 					break;
 
 				case "center":
-					local.Style.SetAlignment( local.Style.ALIGN_CENTER );
+					LOCAL.Style.SetAlignment( LOCAL.Style.ALIGN_CENTER );
 					break;
 
 				case "justify":
-					local.Style.SetAlignment( local.Style.ALIGN_JUSTIFY );
+					LOCAL.Style.SetAlignment( LOCAL.Style.ALIGN_JUSTIFY );
 					break;
 
 			}
@@ -582,23 +582,23 @@
 			switch (ARGUMENTS.CSS[ "vertical-align" ]){
 
 				case "bottom":
-					local.Style.SetVerticalAlignment( local.Style.VERTICAL_BOTTOM );
+					LOCAL.Style.SetVerticalAlignment( LOCAL.Style.VERTICAL_BOTTOM );
 					break;
 
 				case "middle":
-					local.Style.SetVerticalAlignment( local.Style.VERTICAL_CENTER );
+					LOCAL.Style.SetVerticalAlignment( LOCAL.Style.VERTICAL_CENTER );
 					break;
 
 				case "center":
-					local.Style.SetVerticalAlignment( local.Style.VERTICAL_CENTER );
+					LOCAL.Style.SetVerticalAlignment( LOCAL.Style.VERTICAL_CENTER );
 					break;
 
 				case "justify":
-					local.Style.SetVerticalAlignment( local.Style.VERTICAL_JUSTIFY );
+					LOCAL.Style.SetVerticalAlignment( LOCAL.Style.VERTICAL_JUSTIFY );
 					break;
 
 				case "top":
-					local.Style.SetVerticalAlignment( local.Style.VERTICAL_TOP );
+					LOCAL.Style.SetVerticalAlignment( LOCAL.Style.VERTICAL_TOP );
 					break;
 
 			}
@@ -606,13 +606,13 @@
 
 			// Set the cell to wrap text. This will allow new lines to show
 			// up properly in the text.
-			local.Style.SetWrapText(
+			LOCAL.Style.SetWrapText(
 				JavaCast( "boolean", true )
 				);
 
 
 			// Return the style object.
-			return( local.Style );
+			return( LOCAL.Style );
 
 		</cfscript>
 	</cffunction>
@@ -622,26 +622,26 @@
 		hint="Returns a default structure of what this Component is expecting for a sheet definition when WRITING Excel files.">
 
 		<!--- Define the local scope. --->
-		<cfset var local = StructNew() />
+		<cfset var LOCAL = StructNew() />
 
 		<cfscript>
 
 			// This is the query that will hold the data.
-			local.Query = "";
+			LOCAL.Query = "";
 
 			// THis is the list of columns (in a given order) that will be
 			// used to output data.
-			local.ColumnList = "";
+			LOCAL.ColumnList = "";
 
 			// These are the names of the columns used when creating a header
 			// row in the Excel file.
-			local.ColumnNames = "";
+			LOCAL.ColumnNames = "";
 
 			// This is the name of the sheet as it appears in the bottom Excel tab.
-			local.SheetName = "";
+			LOCAL.SheetName = "";
 
 			// Return the local structure containing the sheet info.
-			return( local );
+			return( LOCAL );
 
 		</cfscript>
 	</cffunction>
@@ -656,40 +656,40 @@
 		<cfscript>
 
 			// Define the local scope.
-			var local = StructNew();
+			var LOCAL = StructNew();
 
 			// Create a new CSS structure.
-			local.CSS = StructNew();
+			LOCAL.CSS = StructNew();
 
 			// Set default values.
-			local.CSS[ "background-color" ] = "";
-			local.CSS[ "background-style" ] = "";
-			local.CSS[ "border-bottom-color" ] = "";
-			local.CSS[ "border-bottom-style" ] = "";
-			local.CSS[ "border-bottom-width" ] = "";
-			local.CSS[ "border-left-color" ] = "";
-			local.CSS[ "border-left-style" ] = "";
-			local.CSS[ "border-left-width" ] = "";
-			local.CSS[ "border-right-color" ] = "";
-			local.CSS[ "border-right-style" ] = "";
-			local.CSS[ "border-right-width" ] = "";
-			local.CSS[ "border-top-color" ] = "";
-			local.CSS[ "border-top-style" ] = "";
-			local.CSS[ "border-top-width" ] = "";
-			local.CSS[ "color" ] = "";
-			local.CSS[ "font-family" ] = "";
-			local.CSS[ "font-size" ] = "";
-			local.CSS[ "font-style" ] = "";
-			local.CSS[ "font-weight" ] = "";
-			local.CSS[ "text-align" ] = "";
-			local.CSS[ "vertical-align" ] = "";
+			LOCAL.CSS[ "background-color" ] = "";
+			LOCAL.CSS[ "background-style" ] = "";
+			LOCAL.CSS[ "border-bottom-color" ] = "";
+			LOCAL.CSS[ "border-bottom-style" ] = "";
+			LOCAL.CSS[ "border-bottom-width" ] = "";
+			LOCAL.CSS[ "border-left-color" ] = "";
+			LOCAL.CSS[ "border-left-style" ] = "";
+			LOCAL.CSS[ "border-left-width" ] = "";
+			LOCAL.CSS[ "border-right-color" ] = "";
+			LOCAL.CSS[ "border-right-style" ] = "";
+			LOCAL.CSS[ "border-right-width" ] = "";
+			LOCAL.CSS[ "border-top-color" ] = "";
+			LOCAL.CSS[ "border-top-style" ] = "";
+			LOCAL.CSS[ "border-top-width" ] = "";
+			LOCAL.CSS[ "color" ] = "";
+			LOCAL.CSS[ "font-family" ] = "";
+			LOCAL.CSS[ "font-size" ] = "";
+			LOCAL.CSS[ "font-style" ] = "";
+			LOCAL.CSS[ "font-weight" ] = "";
+			LOCAL.CSS[ "text-align" ] = "";
+			LOCAL.CSS[ "vertical-align" ] = "";
 
 
 			// Clean up the raw CSS values. We don't want to deal with complext CSS
 			// delcarations like font: bold 12px verdana. We want each style to be
 			// defined individually. Keep attacking the raw css and replacing in the
 			// single-values. Clean the initial white space first.
-			local.CleanCSS = ARGUMENTS.CSS.Trim().ToLowerCase().ReplaceAll(
+			LOCAL.CleanCSS = ARGUMENTS.CSS.Trim().ToLowerCase().ReplaceAll(
 
 				"\s+", " "
 
@@ -798,29 +798,29 @@
 
 
 			// Break the clean CSS into name-value pairs.
-			local.Pairs = ListToArray( local.CleanCSS, ";" );
+			LOCAL.Pairs = ListToArray( LOCAL.CleanCSS, ";" );
 
 			// Loop over each CSS pair.
 			for (
-				local.PairIterator = local.Pairs.Iterator() ;
-				local.PairIterator.HasNext() ;
+				LOCAL.PairIterator = LOCAL.Pairs.Iterator() ;
+				LOCAL.PairIterator.HasNext() ;
 				){
 
 				// Break out the name value pair.
-				local.Pair = ToString(local.PairIterator.Next().Trim() & " : ").Split( ":" );
+				LOCAL.Pair = ToString(LOCAL.PairIterator.Next().Trim() & " : ").Split( ":" );
 
 				// Get the name and value values.
-				local.Name = local.Pair[ 1 ].Trim();
-				local.Value = local.Pair[ 2 ].Trim();
+				LOCAL.Name = LOCAL.Pair[ 1 ].Trim();
+				LOCAL.Value = LOCAL.Pair[ 2 ].Trim();
 
 				// Check to see if the name exists in the CSS struct. Remember, we only
 				// want to allow values that we KNOW how to handle.
-				if (StructKeyExists( local.CSS, local.Name )){
+				if (StructKeyExists( LOCAL.CSS, LOCAL.Name )){
 
 					// This is cool, overwrite it. At this point, however, we might
 					// not have exactly proper values. Not sure if I want to deal with that here
 					// or during the CSS application.
-					local.CSS[ local.Name ] = local.Value;
+					LOCAL.CSS[ LOCAL.Name ] = LOCAL.Value;
 
 				}
 
@@ -828,7 +828,7 @@
 
 
 			// Return the default CSS object.
-			return( local.CSS );
+			return( LOCAL.CSS );
 
 		</cfscript>
 	</cffunction>
@@ -864,23 +864,23 @@
 		<cfscript>
 
 			// Define the local scope.
-			var local = StructNew();
+			var LOCAL = StructNew();
 
 
 			// Create a file input stream to the given Excel file.
-			local.FileInputStream = CreateObject( "java", "java.io.FileInputStream" ).Init( ARGUMENTS.FilePath );
+			LOCAL.FileInputStream = CreateObject( "java", "java.io.FileInputStream" ).Init( ARGUMENTS.FilePath );
 
 			// Create the Excel file system object. This object is responsible
 			// for reading in the given Excel file.
-			local.ExcelFileSystem = CreateObject( "java", "org.apache.poi.poifs.filesystem.POIFSFileSystem" ).Init( local.FileInputStream );
+			LOCAL.ExcelFileSystem = CreateObject( "java", "org.apache.poi.poifs.filesystem.POIFSFileSystem" ).Init( LOCAL.FileInputStream );
 
 
 			// Get the workbook from the Excel file system.
-			local.WorkBook = CreateObject(
+			LOCAL.WorkBook = CreateObject(
 				"java",
 				"org.apache.poi.hssf.usermodel.HSSFWorkbook"
 				).Init(
-					local.ExcelFileSystem
+					LOCAL.ExcelFileSystem
 					);
 
 
@@ -889,8 +889,8 @@
 			if (ARGUMENTS.SheetIndex GTE 0){
 
 				// Read the sheet data for a single sheet.
-				local.Sheets = ReadExcelSheet(
-					local.WorkBook,
+				LOCAL.Sheets = ReadExcelSheet(
+					LOCAL.WorkBook,
 					ARGUMENTS.SheetIndex,
 					ARGUMENTS.HasHeaderRow
 					);
@@ -901,21 +901,21 @@
 				// of sheets within the Excel document.
 
 				// Create an array to return.
-				local.Sheets = ArrayNew( 1 );
+				LOCAL.Sheets = ArrayNew( 1 );
 
 				// Loop over the sheets in the documnet.
 				for (
-					local.SheetIndex = 0 ;
-					local.SheetIndex LT local.WorkBook.GetNumberOfSheets() ;
-					local.SheetIndex = (local.SheetIndex + 1)
+					LOCAL.SheetIndex = 0 ;
+					LOCAL.SheetIndex LT LOCAL.WorkBook.GetNumberOfSheets() ;
+					LOCAL.SheetIndex = (LOCAL.SheetIndex + 1)
 					){
 
 					// Add the sheet information.
 					ArrayAppend(
-						local.Sheets,
+						LOCAL.Sheets,
 						ReadExcelSheet(
-							local.WorkBook,
-							local.SheetIndex,
+							LOCAL.WorkBook,
+							LOCAL.SheetIndex,
 							ARGUMENTS.HasHeaderRow
 							)
 						);
@@ -930,10 +930,10 @@
 			// Now that we have crated the Excel file system,
 			// and read in the sheet data, we can close the
 			// input file stream so that it is not locked.
-			local.FileInputStream.Close();
+			LOCAL.FileInputStream.Close();
 
 			// Return the array of sheets.
-			return( local.Sheets );
+			return( LOCAL.Sheets );
 
 		</cfscript>
 	</cffunction>
@@ -969,41 +969,41 @@
 		<cfscript>
 
 			// Define the local scope.
-			var local = StructNew();
+			var LOCAL = StructNew();
 
 			// Set up the default return structure.
-			local.SheetData = StructNew();
+			LOCAL.SheetData = StructNew();
 
 			// This is the index of the sheet within the workbook.
-			local.SheetData.Index = ARGUMENTS.SheetIndex;
+			LOCAL.SheetData.Index = ARGUMENTS.SheetIndex;
 
 			// This is the name of the sheet tab.
-			local.SheetData.Name = ARGUMENTS.WorkBook.GetSheetName(
+			LOCAL.SheetData.Name = ARGUMENTS.WorkBook.GetSheetName(
 				JavaCast( "int", ARGUMENTS.SheetIndex )
 				);
 
 			// This is the query created from the sheet.
-			local.SheetData.Query = QueryNew( "" );
+			LOCAL.SheetData.Query = QueryNew( "" );
 
 			// This is a flag for the header row.
-			local.SheetData.HasHeaderRow = ARGUMENTS.HasHeaderRow;
+			LOCAL.SheetData.HasHeaderRow = ARGUMENTS.HasHeaderRow;
 
 			// This keeps track of the min number of data columns.
-			local.SheetData.MinColumnCount = 0;
+			LOCAL.SheetData.MinColumnCount = 0;
 
 			// This keeps track of the max number of data columns.
-			local.SheetData.MaxColumnCount = 0;
+			LOCAL.SheetData.MaxColumnCount = 0;
 
 
 			// Get the sheet object at this index of the
 			// workbook. This is based on the passed in data.
-			local.Sheet = ARGUMENTS.WorkBook.GetSheetAt(
+			LOCAL.Sheet = ARGUMENTS.WorkBook.GetSheetAt(
 				JavaCast( "int", ARGUMENTS.SheetIndex )
 				);
 
 			// An array of header columns names.
-			local.SheetData.ColumnNames = ArrayNew(1);
-			local.SheetData.ColumnNames = getSheetColumnNames(Local.Sheet,Arguments.HasHeaderRow);
+			LOCAL.SheetData.ColumnNames = ArrayNew(1);
+			LOCAL.SheetData.ColumnNames = getSheetColumnNames(Local.Sheet,Arguments.HasHeaderRow);
 
 			// Loop over the rows in the Excel sheet. For each
 			// row, we simply want to capture the number of
@@ -1011,36 +1011,36 @@
 			// We will then use that data to figure out how many
 			// columns we should be using in our query.
 			for (
-				local.RowIndex = 0 ;
-				local.RowIndex LTE local.Sheet.GetLastRowNum() ;
-				local.RowIndex = (local.RowIndex + 1)
+				LOCAL.RowIndex = 0 ;
+				LOCAL.RowIndex LTE LOCAL.Sheet.GetLastRowNum() ;
+				LOCAL.RowIndex = (LOCAL.RowIndex + 1)
 				){
 
 				// Get a reference to the current row.
-				local.Row = local.Sheet.GetRow(
-					JavaCast( "int", local.RowIndex )
+				LOCAL.Row = LOCAL.Sheet.GetRow(
+					JavaCast( "int", LOCAL.RowIndex )
 					);
 
 				// Check to see if we are at an undefined row. If we are, then
 				// our ROW variable has been destroyed.
-				if (StructKeyExists( local, "Row" )){
+				if (StructKeyExists( LOCAL, "Row" )){
 
 					// Get the number of the last cell in the row. Since we
 					// are in a defined row, we know that we must have at
 					// least one row cell defined (and therefore, we must have
 					// a defined cell number).
-					local.ColumnCount = local.Row.GetLastCellNum();
+					LOCAL.ColumnCount = LOCAL.Row.GetLastCellNum();
 
 					// Update the running min column count.
-					local.SheetData.MinColumnCount = Min(
-						local.SheetData.MinColumnCount,
-						local.ColumnCount
+					LOCAL.SheetData.MinColumnCount = Min(
+						LOCAL.SheetData.MinColumnCount,
+						LOCAL.ColumnCount
 						);
 
 					// Update the running max column count.
-					local.SheetData.MaxColumnCount = Max(
-						local.SheetData.MaxColumnCount,
-						local.ColumnCount
+					LOCAL.SheetData.MaxColumnCount = Max(
+						LOCAL.SheetData.MaxColumnCount,
+						LOCAL.ColumnCount
 						);
 
 				}
@@ -1056,9 +1056,9 @@
 			// Loop over the number of column to create the basic
 			// column structure that we will use in our query.
 			for (
-				local.ColumnIndex = 1 ;
-				local.ColumnIndex LTE local.SheetData.MaxColumnCount ;
-				local.ColumnIndex = (local.ColumnIndex + 1)
+				LOCAL.ColumnIndex = 1 ;
+				LOCAL.ColumnIndex LTE LOCAL.SheetData.MaxColumnCount ;
+				LOCAL.ColumnIndex = (LOCAL.ColumnIndex + 1)
 				){
 
 				// Add the column. Notice that the name of the column is
@@ -1066,7 +1066,7 @@
 				// my column indexes at ONE rather than ZERO to get it back
 				// into a more ColdFusion standard notation.
 				QueryAddColumn(
-					local.SheetData.Query,
+					LOCAL.SheetData.Query,
 					local.SheetData.ColumnNames[local.ColumnIndex],
 					"CF_SQL_VARCHAR",
 					ArrayNew( 1 )
@@ -1084,15 +1084,15 @@
 			// already have a query built, so we just want to start
 			// capturing the cell data.
 			for (
-				local.RowIndex = 0 ;
-				local.RowIndex LTE local.Sheet.GetLastRowNum() ;
-				local.RowIndex = (local.RowIndex + 1)
+				LOCAL.RowIndex = 0 ;
+				LOCAL.RowIndex LTE LOCAL.Sheet.GetLastRowNum() ;
+				LOCAL.RowIndex = (LOCAL.RowIndex + 1)
 				){
 
 
 				// Get a reference to the current row.
-				local.Row = local.Sheet.GetRow(
-					JavaCast( "int", local.RowIndex )
+				LOCAL.Row = LOCAL.Sheet.GetRow(
+					JavaCast( "int", LOCAL.RowIndex )
 					);
 
 
@@ -1101,15 +1101,15 @@
 				// be careful of is that we DONT want to add a row if
 				// we are dealing with a header row.
 				if (
-					local.RowIndex OR
+					LOCAL.RowIndex OR
 					(
 						(NOT ARGUMENTS.HasHeaderRow) AND
-						StructKeyExists( local, "Row" )
+						StructKeyExists( LOCAL, "Row" )
 					)){
 
 					// We wither don't have a header row, or we are no
 					// longer in the first row... add record.
-					QueryAddRow( local.SheetData.Query );
+					QueryAddRow( LOCAL.SheetData.Query );
 
 				}
 
@@ -1117,13 +1117,13 @@
 				// Check to see if we have a row. If we requested an
 				// undefined row, then the NULL value will have
 				// destroyed our Row variable.
-				if (StructKeyExists( local, "Row" )){
+				if (StructKeyExists( LOCAL, "Row" )){
 
 					// Get the number of the last cell in the row. Since we
 					// are in a defined row, we know that we must have at
 					// least one row cell defined (and therefore, we must have
 					// a defined cell number).
-					local.ColumnCount = local.Row.GetLastCellNum();
+					LOCAL.ColumnCount = LOCAL.Row.GetLastCellNum();
 
 					// Now that we have an empty query, we are going to loop over
 					// the cells COUNT for this data row and for each cell, we are
@@ -1131,9 +1131,9 @@
 					// that cells are going to have different data types, but I am
 					// chosing to store everything as a string to make it easier.
 					for (
-						local.ColumnIndex = 0 ;
-						local.ColumnIndex LT local.ColumnCount ;
-						local.ColumnIndex = (local.ColumnIndex + 1)
+						LOCAL.ColumnIndex = 0 ;
+						LOCAL.ColumnIndex LT LOCAL.ColumnCount ;
+						LOCAL.ColumnIndex = (LOCAL.ColumnIndex + 1)
 						){
 
 						// Check to see if we might be dealing with a header row.
@@ -1141,7 +1141,7 @@
 						// the user had flagged the header row usage.
 						if (
 							ARGUMENTS.HasHeaderRow AND
-							(NOT local.RowIndex)
+							(NOT LOCAL.RowIndex)
 							){
 
 							// Try to get a header column name (it might throw
@@ -1152,9 +1152,9 @@
 
 								// Add the cell value to the column names.
 								ArrayAppend(
-									local.SheetData.ColumnNames,
-									local.Row.GetCell(
-										JavaCast( "int", local.ColumnIndex )
+									LOCAL.SheetData.ColumnNames,
+									LOCAL.Row.GetCell(
+										JavaCast( "int", LOCAL.ColumnIndex )
 										).GetStringCellValue()
 									);
 
@@ -1164,7 +1164,7 @@
 								// header column type. Just add an empty string
 								// to make up for it.
 								ArrayAppend(
-									local.SheetData.ColumnNames,
+									LOCAL.SheetData.ColumnNames,
 									""
 									);
 
@@ -1192,21 +1192,21 @@
 							// 5 - CELL_TYPE_ERROR
 
 							// Get the cell from the row object.
-							local.Cell = local.Row.GetCell(
-								JavaCast( "int", local.ColumnIndex )
+							LOCAL.Cell = LOCAL.Row.GetCell(
+								JavaCast( "int", LOCAL.ColumnIndex )
 								);
 
 							// Check to see if we are dealing with a valid cell value.
 							// If this was an undefined cell, the GetCell() will
 							// have returned NULL which will have killed our Cell
 							// variable.
-							if (StructKeyExists( local, "Cell" )){
+							if (StructKeyExists( LOCAL, "Cell" )){
 
 								// ASSERT: We are definitely dealing with a valid
 								// cell which has some sort of defined value.
 
 								// Get the type of data in this cell.
-								local.CellType = local.Cell.GetCellType();
+								LOCAL.CellType = LOCAL.Cell.GetCellType();
 
 
 								// Get teh value of the cell based on the data type. The thing
@@ -1215,25 +1215,25 @@
 								// this demo, I am not going to worry about that at all. I will
 								// just grab dates as floats and formulas I will try to grab as
 								// numeric values.
-								if (local.CellType EQ local.Cell.CELL_TYPE_NUMERIC) {
+								if (LOCAL.CellType EQ LOCAL.Cell.CELL_TYPE_NUMERIC) {
 
 									// Get numeric cell data. This could be a standard number,
 									// could also be a date value. I am going to leave it up to
 									// the calling program to decide.
-									local.CellValue = local.Cell.GetNumericCellValue();
+									LOCAL.CellValue = LOCAL.Cell.GetNumericCellValue();
 
-								} else if (local.CellType EQ local.Cell.CELL_TYPE_STRING){
+								} else if (LOCAL.CellType EQ LOCAL.Cell.CELL_TYPE_STRING){
 
-									local.CellValue = local.Cell.GetStringCellValue();
+									LOCAL.CellValue = LOCAL.Cell.GetStringCellValue();
 
-								} else if (local.CellType EQ local.Cell.CELL_TYPE_FORMULA){
+								} else if (LOCAL.CellType EQ LOCAL.Cell.CELL_TYPE_FORMULA){
 
 									// Since most forumlas deal with numbers, I am going to try
 									// to grab the value as a number. If that throws an error, I
 									// will just grab it as a string value.
 									try {
 
-										local.CellValue = local.Cell.GetNumericCellValue();
+										LOCAL.CellValue = LOCAL.Cell.GetNumericCellValue();
 
 									} catch (any Error1){
 
@@ -1241,28 +1241,28 @@
 										// string. If this fails, just force the empty string.
 										try {
 
-											local.CellValue = local.Cell.GetStringCellValue();
+											LOCAL.CellValue = LOCAL.Cell.GetStringCellValue();
 
 										} catch (any Error2){
 
 											// Force empty string.
-											local.CellValue = "";
+											LOCAL.CellValue = "";
 
 						 				}
 									}
 
-								} else if (local.CellType EQ local.Cell.CELL_TYPE_BLANK){
+								} else if (LOCAL.CellType EQ LOCAL.Cell.CELL_TYPE_BLANK){
 
-									local.CellValue = "";
+									LOCAL.CellValue = "";
 
-								} else if (local.CellType EQ local.Cell.CELL_TYPE_BOOLEAN){
+								} else if (LOCAL.CellType EQ LOCAL.Cell.CELL_TYPE_BOOLEAN){
 
-									local.CellValue = local.Cell.GetBooleanCellValue();
+									LOCAL.CellValue = LOCAL.Cell.GetBooleanCellValue();
 
 								} else {
 
 									// If all else fails, get empty string.
-									local.CellValue = "";
+									LOCAL.CellValue = "";
 
 								}
 
@@ -1270,7 +1270,7 @@
 								// ASSERT: At this point, we either got the cell value out of the
 								// Excel data cell or we have thrown an error or didn't get a
 								// matching type and just have the empty string by default.
-								// No matter what, the object local.CellValue is defined and
+								// No matter what, the object LOCAL.CellValue is defined and
 								// has some sort of SIMPLE ColdFusion value in it.
 
 
@@ -1278,7 +1278,7 @@
 								// query object. Remember again that my query names are ONE based
 								// for ColdFusion standards. That is why I am adding 1 to the
 								// cell index.
-								local.SheetData.Query[ local.SheetData.ColumnNames[local.ColumnIndex+1] ][ local.SheetData.Query.RecordCount ] = JavaCast( "string", local.CellValue );
+								LOCAL.SheetData.Query[ local.SheetData.ColumnNames[local.ColumnIndex+1] ][ LOCAL.SheetData.Query.RecordCount ] = JavaCast( "string", LOCAL.CellValue );
 
 							}
 
@@ -1293,7 +1293,7 @@
 
 			// Return the sheet object that contains all the Excel data.
 			return(
-				local.SheetData
+				LOCAL.SheetData
 				);
 
 		</cfscript>
@@ -1370,10 +1370,10 @@
 		<cfscript>
 
 			// Set up local scope.
-			var local = StructNew();
+			var LOCAL = StructNew();
 
 			// Create Excel workbook.
-			local.WorkBook = CreateObject(
+			LOCAL.WorkBook = CreateObject(
 				"java",
 				"org.apache.poi.hssf.usermodel.HSSFWorkbook"
 				).Init();
@@ -1386,19 +1386,19 @@
 				// as a tab to the Excel file. Loop over the sheet array to create each
 				// sheet for the already created workbook.
 				for (
-					local.SheetIndex = 1 ;
-					local.SheetIndex LTE ArrayLen( ARGUMENTS.Sheets ) ;
-					local.SheetIndex = (local.SheetIndex + 1)
+					LOCAL.SheetIndex = 1 ;
+					LOCAL.SheetIndex LTE ArrayLen( ARGUMENTS.Sheets ) ;
+					LOCAL.SheetIndex = (LOCAL.SheetIndex + 1)
 					){
 
 
 					// Create sheet for the given query information..
 					WriteExcelSheet(
-						WorkBook = local.WorkBook,
-						Query = ARGUMENTS.Sheets[ local.SheetIndex ].Query,
-						ColumnList = ARGUMENTS.Sheets[ local.SheetIndex ].ColumnList,
-						ColumnNames = ARGUMENTS.Sheets[ local.SheetIndex ].ColumnNames,
-						SheetName = ARGUMENTS.Sheets[ local.SheetIndex ].SheetName,
+						WorkBook = LOCAL.WorkBook,
+						Query = ARGUMENTS.Sheets[ LOCAL.SheetIndex ].Query,
+						ColumnList = ARGUMENTS.Sheets[ LOCAL.SheetIndex ].ColumnList,
+						ColumnNames = ARGUMENTS.Sheets[ LOCAL.SheetIndex ].ColumnNames,
+						SheetName = ARGUMENTS.Sheets[ LOCAL.SheetIndex ].SheetName,
 						Delimiters = ARGUMENTS.Delimiters,
 						HeaderCSS = ARGUMENTS.HeaderCSS,
 						RowCSS = ARGUMENTS.RowCSS,
@@ -1412,7 +1412,7 @@
 				// We were passed in a single sheet object. Write this sheet as the
 				// first and only sheet in the already created workbook.
 				WriteExcelSheet(
-					WorkBook = local.WorkBook,
+					WorkBook = LOCAL.WorkBook,
 					Query = ARGUMENTS.Sheets.Query,
 					ColumnList = ARGUMENTS.Sheets.ColumnList,
 					ColumnNames = ARGUMENTS.Sheets.ColumnNames,
@@ -1433,7 +1433,7 @@
 
 			// Create a file based on the path that was passed in. We will stream
 			// the work data to the file via a file output stream.
-			local.FileOutputStream = CreateObject(
+			LOCAL.FileOutputStream = CreateObject(
 				"java",
 				"java.io.FileOutputStream"
 				).Init(
@@ -1446,13 +1446,13 @@
 					);
 
 			// Write the workout data to the file stream.
-			local.WorkBook.Write(
-				local.FileOutputStream
+			LOCAL.WorkBook.Write(
+				LOCAL.FileOutputStream
 				);
 
 			// Close the file output stream. This will release any locks on
 			// the file and finalize the process.
-			local.FileOutputStream.Close();
+			LOCAL.FileOutputStream.Close();
 
 			// Return out.
 			return;
@@ -1538,76 +1538,76 @@
 		<cfscript>
 
 			// Set up local scope.
-			var local = StructNew();
+			var LOCAL = StructNew();
 
 			// Set up data type map so that we can map each column name to
 			// the type of data contained.
-			local.DataMap = StructNew();
+			LOCAL.DataMap = StructNew();
 
 			// Get the meta data of the query to help us create the data mappings.
-			local.MetaData = GetMetaData( ARGUMENTS.Query );
+			LOCAL.MetaData = GetMetaData( ARGUMENTS.Query );
 
 			// Loop over meta data values to set up the data mapping.
 			for (
-				local.MetaIndex = 1 ;
-				local.MetaIndex LTE ArrayLen( local.MetaData ) ;
-				local.MetaIndex = (local.MetaIndex + 1)
+				LOCAL.MetaIndex = 1 ;
+				LOCAL.MetaIndex LTE ArrayLen( LOCAL.MetaData ) ;
+				LOCAL.MetaIndex = (LOCAL.MetaIndex + 1)
 				){
 
 				// Map the column name to the data type.
-				local.DataMap[ local.MetaData[ local.MetaIndex ].Name ] = local.MetaData[ local.MetaIndex ].TypeName;
+				LOCAL.DataMap[ LOCAL.MetaData[ LOCAL.MetaIndex ].Name ] = LOCAL.MetaData[ LOCAL.MetaIndex ].TypeName;
 			}
 
 
 			// Create standardized header CSS by parsing the raw header css.
-			local.HeaderCSS = ParseRawCSS( ARGUMENTS.HeaderCSS );
+			LOCAL.HeaderCSS = ParseRawCSS( ARGUMENTS.HeaderCSS );
 
 			// Get the header style object based on the CSS.
-			local.HeaderStyle = GetCellStyle(
+			LOCAL.HeaderStyle = GetCellStyle(
 				WorkBook = ARGUMENTS.WorkBook,
-				CSS = local.HeaderCSS
+				CSS = LOCAL.HeaderCSS
 				);
 
 
 			// Create standardized row CSS by parsing the raw row css.
-			local.RowCSS = ParseRawCSS( ARGUMENTS.RowCSS );
+			LOCAL.RowCSS = ParseRawCSS( ARGUMENTS.RowCSS );
 
 			// Get the row style object based on the CSS.
-			local.RowStyle = GetCellStyle(
+			LOCAL.RowStyle = GetCellStyle(
 				WorkBook = ARGUMENTS.WorkBook,
-				CSS = local.RowCSS
+				CSS = LOCAL.RowCSS
 				);
 
 
 			// Create standardized alt-row CSS by parsing the raw alt-row css.
-			local.AltRowCSS = ParseRawCSS( ARGUMENTS.AltRowCSS );
+			LOCAL.AltRowCSS = ParseRawCSS( ARGUMENTS.AltRowCSS );
 
 			// Now, loop over alt row css and check for values. If there are not
 			// values (no length), then overwrite the alt row with the standard
 			// row. This is a round-about way of letting the alt row override
 			// the standard row.
-			for (local.Key in local.AltRowCSS){
+			for (LOCAL.Key in LOCAL.AltRowCSS){
 
 				// Check for value.
-				if (NOT Len( local.AltRowCSS[ local.Key ] )){
+				if (NOT Len( LOCAL.AltRowCSS[ LOCAL.Key ] )){
 
 					// Since we don't have an alt row style, copy over the standard
 					// row style's value for this key.
-					local.AltRowCSS[ local.Key ] = local.RowCSS[ local.Key ];
+					LOCAL.AltRowCSS[ LOCAL.Key ] = LOCAL.RowCSS[ LOCAL.Key ];
 
 				}
 
 			}
 
 			// Get the alt-row style object based on the CSS.
-			local.AltRowStyle = GetCellStyle(
+			LOCAL.AltRowStyle = GetCellStyle(
 				WorkBook = ARGUMENTS.WorkBook,
-				CSS = local.AltRowCSS
+				CSS = LOCAL.AltRowCSS
 				);
 
 
 			// Create the sheet in the workbook.
-			local.Sheet = ARGUMENTS.WorkBook.CreateSheet(
+			LOCAL.Sheet = ARGUMENTS.WorkBook.CreateSheet(
 				JavaCast(
 					"string",
 					ARGUMENTS.SheetName
@@ -1615,14 +1615,14 @@
 				);
 
 			// Set the sheet's default column width.
-			local.Sheet.SetDefaultColumnWidth(
+			LOCAL.Sheet.SetDefaultColumnWidth(
 				JavaCast( "int", 23 )
 				);
 
 
 			// Set a default row offset so that we can keep add the header
 			// column without worrying about it later.
-			local.RowOffset = -1;
+			LOCAL.RowOffset = -1;
 
 			// Check to see if we have any column names. If we do, then we
 			// are going to create a header row with these names in order
@@ -1631,19 +1631,19 @@
 
 				// Convert the column names to an array for easier
 				// indexing and faster access.
-				local.ColumnNames = ListToArray(
+				LOCAL.ColumnNames = ListToArray(
 					ARGUMENTS.ColumnNames,
 					ARGUMENTS.Delimiters
 					);
 
 				// Create a header row.
-				local.Row = local.Sheet.CreateRow(
+				LOCAL.Row = LOCAL.Sheet.CreateRow(
 					JavaCast( "int", 0 )
 					);
 
 				// Set the row height.
 				/*
-				local.Row.SetHeightInPoints(
+				LOCAL.Row.SetHeightInPoints(
 					JavaCast( "float", 14 )
 					);
 				*/
@@ -1651,40 +1651,40 @@
 
 				// Loop over the column names.
 				for (
-					local.ColumnIndex = 1 ;
-					local.ColumnIndex LTE ArrayLen( local.ColumnNames ) ;
-					local.ColumnIndex = (local.ColumnIndex + 1)
+					LOCAL.ColumnIndex = 1 ;
+					LOCAL.ColumnIndex LTE ArrayLen( LOCAL.ColumnNames ) ;
+					LOCAL.ColumnIndex = (LOCAL.ColumnIndex + 1)
 					){
 
 					// Create a cell for this column header.
-					local.Cell = local.Row.CreateCell(
-						JavaCast( "int", (local.ColumnIndex - 1) )
+					LOCAL.Cell = LOCAL.Row.CreateCell(
+						JavaCast( "int", (LOCAL.ColumnIndex - 1) )
 						);
 
 					// Set the cell value.
-					local.Cell.SetCellValue(
+					LOCAL.Cell.SetCellValue(
 						JavaCast(
 							"string",
-							local.ColumnNames[ local.ColumnIndex ]
+							LOCAL.ColumnNames[ LOCAL.ColumnIndex ]
 							)
 						);
 
 					// Set the header cell style.
-					local.Cell.SetCellStyle(
-						local.HeaderStyle
+					LOCAL.Cell.SetCellStyle(
+						LOCAL.HeaderStyle
 						);
 
 				}
 
 				// Set the row offset to zero since this will take care of
 				// the zero-based index for the rest of the query records.
-				local.RowOffset = 0;
+				LOCAL.RowOffset = 0;
 
 			}
 
 			// Convert the list of columns to the an array for easier
 			// indexing and faster access.
-			local.Columns = ListToArray(
+			LOCAL.Columns = ListToArray(
 				ARGUMENTS.ColumnList,
 				ARGUMENTS.Delimiters
 				);
@@ -1692,22 +1692,22 @@
 			// Loop over the query records to add each one to the
 			// current sheet.
 			for (
-				local.RowIndex = 1 ;
-				local.RowIndex LTE ARGUMENTS.Query.RecordCount ;
-				local.RowIndex = (local.RowIndex + 1)
+				LOCAL.RowIndex = 1 ;
+				LOCAL.RowIndex LTE ARGUMENTS.Query.RecordCount ;
+				LOCAL.RowIndex = (LOCAL.RowIndex + 1)
 				){
 
 				// Create a row for this query record.
-				local.Row = local.Sheet.CreateRow(
+				LOCAL.Row = LOCAL.Sheet.CreateRow(
 					JavaCast(
 						"int",
-						(local.RowIndex + local.RowOffset)
+						(LOCAL.RowIndex + LOCAL.RowOffset)
 						)
 					);
 
 				/*
 				// Set the row height.
-				local.Row.SetHeightInPoints(
+				LOCAL.Row.SetHeightInPoints(
 					JavaCast( "float", 14 )
 					);
 				*/
@@ -1716,60 +1716,60 @@
 				// Loop over the columns to create the individual data cells
 				// and set the values.
 				for (
-					local.ColumnIndex = 1 ;
-					local.ColumnIndex LTE ArrayLen( local.Columns ) ;
-					local.ColumnIndex = (local.ColumnIndex + 1)
+					LOCAL.ColumnIndex = 1 ;
+					LOCAL.ColumnIndex LTE ArrayLen( LOCAL.Columns ) ;
+					LOCAL.ColumnIndex = (LOCAL.ColumnIndex + 1)
 					){
 
 					// Create a cell for this query cell.
-					local.Cell = local.Row.CreateCell(
-						JavaCast( "int", (local.ColumnIndex - 1) )
+					LOCAL.Cell = LOCAL.Row.CreateCell(
+						JavaCast( "int", (LOCAL.ColumnIndex - 1) )
 						);
 
 					// Get the generic cell value (short hand).
-					local.CellValue = ARGUMENTS.Query[
-						local.Columns[ local.ColumnIndex ]
-						][ local.RowIndex ];
+					LOCAL.CellValue = ARGUMENTS.Query[
+						LOCAL.Columns[ LOCAL.ColumnIndex ]
+						][ LOCAL.RowIndex ];
 
 					// Check to see how we want to set the value. Meaning, what
 					// kind of data mapping do we want to apply? Get the data
 					// mapping value.
-					local.DataMapValue = local.DataMap[ local.Columns[ local.ColumnIndex ] ];
+					LOCAL.DataMapValue = LOCAL.DataMap[ LOCAL.Columns[ LOCAL.ColumnIndex ] ];
 
 					// Check to see what value type we are working with. I am
 					// not sure what the set of values are, so trying to keep
 					// it general.
-					if (REFindNoCase( "int", local.DataMapValue )){
+					if (REFindNoCase( "int", LOCAL.DataMapValue )){
 
-						local.DataMapCast = "int";
+						LOCAL.DataMapCast = "int";
 
-					} else if (REFindNoCase( "long", local.DataMapValue )){
+					} else if (REFindNoCase( "long", LOCAL.DataMapValue )){
 
-						local.DataMapCast = "long";
+						LOCAL.DataMapCast = "long";
 
-					} else if (REFindNoCase( "double|decimal|numeric", local.DataMapValue )){
+					} else if (REFindNoCase( "double|decimal|numeric", LOCAL.DataMapValue )){
 
-						local.DataMapCast = "double";
+						LOCAL.DataMapCast = "double";
 
-					} else if (REFindNoCase( "float|real|date|time", local.DataMapValue )){
+					} else if (REFindNoCase( "float|real|date|time", LOCAL.DataMapValue )){
 
-						local.DataMapCast = "float";
+						LOCAL.DataMapCast = "float";
 
-					} else if (REFindNoCase( "bit", local.DataMapValue )){
+					} else if (REFindNoCase( "bit", LOCAL.DataMapValue )){
 
-						local.DataMapCast = "boolean";
+						LOCAL.DataMapCast = "boolean";
 
-					} else if (REFindNoCase( "char|text|memo", local.DataMapValue )){
+					} else if (REFindNoCase( "char|text|memo", LOCAL.DataMapValue )){
 
-						local.DataMapCast = "string";
+						LOCAL.DataMapCast = "string";
 
-					} else if (IsNumeric( local.CellValue )){
+					} else if (IsNumeric( LOCAL.CellValue )){
 
-						local.DataMapCast = "float";
+						LOCAL.DataMapCast = "float";
 
 					} else {
 
-						local.DataMapCast = "string";
+						LOCAL.DataMapCast = "string";
 
 					}
 
@@ -1779,38 +1779,51 @@
 					//
 					// NOTE: Only set the cell value if we have a length. This
 					// will stop us from improperly attempting to cast NULL values.
-					if (Len( local.CellValue )){
+					if (Len( LOCAL.CellValue )){
 
-						local.Cell.SetCellValue(
+						LOCAL.Cell.SetCellValue(
 							JavaCast(
-								local.DataMapCast,
-								local.CellValue
+								LOCAL.DataMapCast,
+								LOCAL.CellValue
 								)
 							);
+
 					}
-					
+
+
 					// Get a pointer to the proper cell style. Check to see if we
 					// are in an alternate row.
-					if (local.RowIndex MOD 2){
+					if (LOCAL.RowIndex MOD 2){
+
 						// Set standard row style.
-						local.Cell.SetCellStyle(
-							local.RowStyle
+						LOCAL.Cell.SetCellStyle(
+							LOCAL.RowStyle
 							);
+
 					} else {
+
 						// Set alternate row style.
-						local.Cell.SetCellStyle(
-							local.AltRowStyle
+						LOCAL.Cell.SetCellStyle(
+							LOCAL.AltRowStyle
 							);
+
 					}
+
 				}
+
 			}
-			
+
+
 			// Return out.
 			return;
+
 		</cfscript>
 	</cffunction>
-	
-	<cffunction name="WriteSingleExcel" access="public" returntype="void" output="false" hint="Write the given query to an Excel file.">
+
+
+	<cffunction name="WriteSingleExcel" access="public" returntype="void" output="false"
+		hint="Write the given query to an Excel file.">
+
 		<!--- Define arguments. --->
 		<cfargument
 			name="FilePath"
@@ -1818,12 +1831,14 @@
 			required="true"
 			hint="This is the expanded path of the Excel file."
 			/>
+
 		<cfargument
 			name="Query"
 			type="query"
 			required="true"
 			hint="This is the query from which we will get the data for the Excel file."
 			/>
+
 		<cfargument
 			name="ColumnList"
 			type="string"
@@ -1831,6 +1846,7 @@
 			default="#ARGUMENTS.Query.ColumnList#"
 			hint="This is list of columns provided in custom-order."
 			/>
+
 		<cfargument
 			name="ColumnNames"
 			type="string"
@@ -1838,6 +1854,7 @@
 			default=""
 			hint="This the the list of optional header-row column names. If this is not provided, no header row is used."
 			/>
+
 		<cfargument
 			name="SheetName"
 			type="string"
@@ -1845,6 +1862,7 @@
 			default="Sheet 1"
 			hint="This is the optional name that appears in the first (and only) workbook tab."
 			/>
+
 		<cfargument
 			name="Delimiters"
 			type="string"
@@ -1852,6 +1870,7 @@
 			default=","
 			hint="The list of delimiters used for the column list and column name arguments."
 			/>
+
 		<cfargument
 			name="HeaderCSS"
 			type="string"
@@ -1859,6 +1878,7 @@
 			default=""
 			hint="Defines the limited CSS available for the header row (if a header row is used)."
 			/>
+
 		<cfargument
 			name="RowCSS"
 			type="string"
@@ -1866,6 +1886,7 @@
 			default=""
 			hint="Defines the limited CSS available for the non-header rows."
 			/>
+
 		<cfargument
 			name="AltRowCSS"
 			type="string"
@@ -1873,66 +1894,64 @@
 			default=""
 			hint="Defines the limited CSS available for the alternate non-header rows. This style overwrites parts of the RowCSS."
 			/>
-		
+
 		<cfscript>
+
 			// Set up local scope.
-			var local = StructNew();
-			
+			var LOCAL = StructNew();
+
 			// Get a new sheet object.
-			local.Sheet = GetNewSheetStruct();
-			
+			LOCAL.Sheet = GetNewSheetStruct();
+
 			// Set the sheet properties.
-			local.Sheet.Query = ARGUMENTS.Query;
-			local.Sheet.ColumnList = ARGUMENTS.ColumnList;
-			local.Sheet.ColumnNames = ARGUMENTS.ColumnNames;
-			local.Sheet.SheetName = ARGUMENTS.SheetName;
-			
+			LOCAL.Sheet.Query = ARGUMENTS.Query;
+			LOCAL.Sheet.ColumnList = ARGUMENTS.ColumnList;
+			LOCAL.Sheet.ColumnNames = ARGUMENTS.ColumnNames;
+			LOCAL.Sheet.SheetName = ARGUMENTS.SheetName;
+
 			// Write this sheet to an Excel file.
 			WriteExcel(
 				FilePath = ARGUMENTS.FilePath,
-				Sheets = local.Sheet,
+				Sheets = LOCAL.Sheet,
 				Delimiters = ARGUMENTS.Delimiters,
 				HeaderCSS = ARGUMENTS.HeaderCSS,
 				RowCSS = ARGUMENTS.RowCSS,
 				AltRowCSS = ARGUMENTS.AltRowCSS
 				);
-			
+
 			// Return out.
 			return;
+
 		</cfscript>
 	</cffunction>
-	
+
 	<cffunction name="getSheetColumnNames" access="private" hint="gets or derives the column names for the sheet">
 		<cfargument name="Sheet" type="any" required="true"/>
 		<cfargument name="HasHeaderRow" type="boolean" required="true"/>
 		<cfscript>
-			local = structNew();
-			local.names = ArrayNew(1);
-			local.columnName = "";
-			local.row = Sheet.GetRow(JavaCast( "int", 0 ));
-			local.columnCount = local.Row.GetLastCellNum();
-			
-			for(local.columnIndex = 0; local.columnIndex LT local.columnCount; local.columnIndex=local.columnIndex+1) {
-				local.columnName = "column#local.columnIndex+1#";
-				
-				if(arguments.HasHeaderRow) {
-					try {
-						local.columnName = local.row.GetCell(JavaCast( "int", local.columnIndex )).GetStringCellValue();
-					} catch(Any exception){
-						//whoopsie. we'll use the originally derived column name instead
-					}
+		var local = StructNew(); local.names = ArrayNew(1); local.columnName = "";
+		local.row = Sheet.GetRow(JavaCast( "int", 0 ));
+		local.columnCount = LOCAL.Row.GetLastCellNum();
+		for(local.columnIndex = 0; local.columnIndex LT local.columnCount; local.columnIndex=local.columnIndex+1){
+			local.columnName = "column#local.columnIndex+1#";
+			if(arguments.HasHeaderRow){
+				try{
+					local.columnName = local.row.GetCell(JavaCast( "int", local.columnIndex ))
+							  .GetStringCellValue();
+				}catch(Any exception){
+					//whoopsie. we'll use the originally derived column name instead
 				}
-				
-				ArrayAppend(local.names,local.columnName);
 			}
-			
-			return local.names;
+			ArrayAppend(local.names,local.columnName);
+		}
+		return local.names;
 		</cfscript>
 	</cffunction>
-	
-	<cffunction name="debug">
+
+
+	<cffunction name="Debug">
 		<cfdump var="#ARGUMENTS#" />
-		
 		<cfabort />
 	</cffunction>
+
 </cfcomponent>

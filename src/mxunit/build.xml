@@ -46,7 +46,7 @@
 	<target name="package" depends="clean,version" description="--> packages the appropriate files into the deployment-ready zip file. use this for testing; otherwise, use publish">
 		<echo message="building ${zipfile}. basedir is  ${basedir}" />
 		<zip destfile="${zipfile}" casesensitive="false">
-			<zipfileset dir="${basedir}" includes="*.*,ant/,buildprops/,cfeclipse/,doc/,framework/,generator/,images/,PluginDemoTests/,resources/,runner/,samples/,tests/,lib/ant-contrib**" excludes="MXUnitInstallTest.cfc,**/testresults/,**/stats/,**/junithtml/,.project,.deployment,**/unames.properties,tests/tmp/,ftp.listing,**/*.db,**/copysnippets.properties,**/copydictionary**,**/*.bak,buildprops/nightlyversion.properties" prefix="mxunit" casesensitive="false" />
+			<zipfileset dir="${basedir}" includes="*.*,ant/,buildprops/,eclipse/,doc/,framework/,generator/,images/,PluginDemoTests/,resources/,runner/,samples/,tests/,lib/ant-contrib**" excludes=".gitignore,MXUnitInstallTest.cfc,**/testresults/,**/stats/,**/junithtml/,.project,.deployment,**/unames.properties,tests/tmp/,ftp.listing,**/*.db,**/copysnippets.properties,**/copydictionary**,**/*.bak,buildprops/nightlyversion.properties,settings.xml" prefix="mxunit" casesensitive="false" />
 		</zip>
 	</target>
 	
@@ -116,6 +116,10 @@
 		=================================
 	-->
 	<target name="init">
+		
+		<!-- user property file for instance specific settings -->
+		<property file="${unames.file}" />	
+		
 		<tstamp>
 			<format pattern="MM_dd_yyyy" property="nightlystamp" />
 		</tstamp>
@@ -128,6 +132,7 @@
 		<property name="statsvn.file" value="buildprops/statsvn.properties" />
 		<property name="testmailmessage.file" value="buildprops/testresultsmail.html" />
 		<property name="svnserver" value="https://mxunit.googlecode.com/svn" />
+		<property name="svnant.dir" value="svnant13" /> <!-- can also use svnant12 -->
 
 		<!-- for the test runner -->
 		<property name="mxunit.jar" value="ant/lib/mxunit-ant.jar" />
@@ -138,19 +143,14 @@
 		<property name="output.dir" value="${junit.out.dir.xml}/tmp" />
 		<property name="style.dir" value="ant/xsl/" />
 
-		<!-- user property file for instance specific settings -->
-		<property file="${unames.file}" />
-		<!--
-			get the server, port, and webroot properties from the 
-			antrunner file; this way each developer can have their
-			own version of the properties file with different
-			values depending on their setup
-		-->
-		<property file="${antrunner.file}" />
+
+		
+		
 
 		<path id="project.classpath">
 			<fileset dir="lib">
-				<include name="**/*.jar" />
+				<include name="*.jar" />
+				<include name="${svnant.dir}/*.jar" />
 			</fileset>
 		</path>
 		<taskdef name="mxunittask" classname="org.mxunit.ant.MXUnitAntTask" classpath="${mxunit.jar}" />
@@ -189,7 +189,7 @@
 
 		<propertyfile file="${version.file}" comment="Build version info">
 			<entry key="build.date" type="date" value="now" pattern="MM/dd/yyyy" />
-			<entry key="build.major" type="int" operation="=" value="1" />
+			<entry key="build.major" type="int" operation="=" value="2" />
 			<entry key="build.minor" type="int" operation="=" value="0" />
 			<entry key="build.notation" operation="=" value="" />
 			<entry key="build.versiondescription" operation="=" value="Release" />
@@ -276,11 +276,8 @@
 		=================================
 	-->
 	<target name="update" depends="init" unless="nosvnupdate">
-		<property name="svnupdatedir" location="${webroot}/mxunit"/>
-		<echo message="Updating ${svnupdatedir} from SVN"/>
 		<svn username="${gc.username}" password="${gc.password}" svnkit="true">
-			
-			<update dir="${svnupdatedir}" />
+			<update dir="." />
 		</svn>
 	</target>
 
@@ -290,7 +287,7 @@
 			Runs the MXUnit tests on MXUnit
 		=================================
 	-->
-	<target name="runTests" depends="init,update">
+	<target name="runTests" depends="init">
 		<!--
 			load the current version of the package-summary file; 
 			this way, we can put it at the end of the email we 
@@ -306,9 +303,18 @@
 		<mkdir dir="${junit.out.dir.html}" />
 		<mkdir dir="${output.dir}" />
 
+		<!--
+			get the server, port, and webroot properties from the 
+			antrunner file; this way each developer can have their
+			own version of the properties file with different
+			values depending on their setup
+		-->
+		<property file="${antrunner.file}" />
+
 		<mxunittask server="${server}" port="${port}" defaultrunner="/mxunit/runner/HttpAntRunner.cfc" outputdir="${output.dir}" verbose="true" testResultsSummary="my.summary" failureproperty="testsfailed">
 			<!-- componentPath is not required, but it results in a much faster test run -->
 			<directory remoteMethod="run" path="${webroot}/mxunit/tests/framework/" packageName="mxunit.tests.framework" componentPath="mxunit.tests.framework" recurse="false" includes="*.cfc" excludes="" />
+			<directory remoteMethod="run" path="${webroot}/mxunit/tests/mightymock/" packageName="mxunit.tests.mightymock" componentPath="mxunit.tests.mightymock" recurse="false" includes="*.cfc" excludes="" />
 			<directory remoteMethod="run" path="${webroot}/mxunit/tests/runner" packageName="mxunit.tests.runner" componentPath="mxunit.tests.runner" recurse="false" includes="*.cfc" excludes="" />
 		</mxunittask>
 
@@ -345,6 +351,20 @@
 		-->
 		<fail if="testsfailed" message="Failing the build because tests failed" />
 	</target>
+
+
+	<!--
+		=================================
+			Target: genApiDocs
+			Calls JS in build props which invokes the ColdDoc cfml script
+		=================================
+	-->
+	<target name="genApiDocs" depends="init">
+		<property file="${antrunner.file}" /> 
+		<script language="javascript" src="buildprops/scripts/http_doc_gen.js" />
+	</target>
+	
+
 
 	<!--
 		=================================

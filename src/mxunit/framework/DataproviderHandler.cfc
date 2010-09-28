@@ -18,14 +18,17 @@
 
   <cffunction name="runDataProvider" access="public" hint="Main entry point. Delegates to specific datatype handler">
     <cfargument name="objectUnderTest" type="any" required="true"/>
-		<cfargument name="methodName" type="any" required="true">
-		<cfargument name="dataProvider" type="any" required="true"  hint="Name of object to iterate">
+	<cfargument name="methodName" type="any" required="true">
+	<cfargument name="dataProvider" type="any" required="true"  hint="Name of object to iterate">
     <cfset var provider = '' />
 
     <cftry>
       <cfset provider = context[arguments.dataprovider] />
       <cfcatch type="coldfusion.runtime.UndefinedElementException">
-      <cfset _$throw() />
+	  <!--- Make sure simple numeric data passes, which would not be in variables scope --->	
+	  <cfif not isNumeric(dataProvider)>
+      	<cfset _$throw() />
+	  </cfif>
       </cfcatch>
     </cftry>
 
@@ -33,7 +36,7 @@
       <cfset runQueryDataProvider(objectUnderTest,methodName,dataProvider)>
     <cfelseif isArray(provider)>
        <cfset runArrayDataProvider(objectUnderTest,methodName,dataProvider)>
-    <cfelseif isNumeric(provider)>
+    <cfelseif isNumeric(provider) or isNumeric(dataProvider)>
         <cfset runNumericDataProvider(objectUnderTest,methodName,dataProvider)>
 	<cfelseif fileExists(provider)>
 		<cfset runFileDataProvider(objectUnderTest,methodName,dataProvider)>
@@ -105,12 +108,17 @@
 	 var count = 0;
 	 var args = structNew();
 	 if(NOT arrayLen(getMetaData(method).parameters)){
-        $_throw(type="mxunit.exception.MissingDataProviderArgumentException",
+        _$throw(type="mxunit.exception.MissingDataProviderArgumentException",
                  message="You must specify a  <cfargument...> when using the dataprovider annotation in your test.",
                  detail="Usage: <cffunction mxunit:dataprovider ...> <cfargument name=""index"" />");
      }
      idxName = getMetaData(method).parameters[1].name;
-     count = context[dataProvider];
+     try {
+       count = context[dataProvider]; //account for variable names vs. raw int values
+     }
+     catch (any e){
+     	count = dataProvider;
+     }
      args[idxName] = 0;
 	 for(i=1; i LTE count; i=i+1){
 	 	args[idxName] = i;
@@ -212,6 +220,7 @@
 		if(not localQuery.RecordCount) _$throw(message="Query DataProvider #dataProvider# did not contain any rows");
 		while( localQuery.next() ) {
 		  invokeComponentForQueryProvider(objectUnderTest, methodName,  getTopRow(localQuery));
+		  //This fails on Railo-different Java interface than ColdFusion
 		  localQuery.removeRows(javacast('int',localQuery.getRow()-1), javacast('int',1));
 		  localQuery.beforefirst();
 		}
@@ -250,37 +259,38 @@
 	 <cfreturn q />
 	</cffunction>
 
-	<!--- Handles query invocations only --->
-	<cffunction name="invokeComponentForQueryProvider" access="private">
-		<cfargument name="objectUnderTest" type="any" required="true" />
-		<cfargument name="methodName" type="string" required="true" />
-		<cfargument name="query" type="query" required="true" />
+<!--- Handles query invocations only --->
+   <cffunction name="invokeComponentForQueryProvider" access="private">
+      <cfargument name="objectUnderTest" type="any" required="true" />
+	  <cfargument name="methodName" type="string" required="true" />
+	  <cfargument name="query" type="query" required="true" />
 
-		<cfscript>
-			var args = structNew();
-			var localVar = '';
-			var method = arguments.objectUnderTest[arguments.methodName];
-			var queryName = '';
-			if(NOT arrayLen(getMetaData(method).parameters)){
-				_$throw(type="mxunit.exception.MissingDataProviderArgumentException",
-						message="You must specify a  <cfargument...> when using the dataprovider annotation in your test.",
-						detail="Usage: <cffunction mxunit:dataprovider ...> <cfargument name=""queryName"" />");
-			}
-			
-			queryName = getMetaData(method).parameters[1].name;
-			args[queryName] = arguments.query;
-			_$invoke(arguments.objectUnderTest,arguments.methodName,args);
-		</cfscript>
-	</cffunction>
+	  <cfscript>
+		var args = structNew();
+		var localVar = '';
+		var method = arguments.objectUnderTest[arguments.methodName];
+		var queryName = '';
+		if(NOT arrayLen(getMetaData(method).parameters)){
+			_$throw(type="mxunit.exception.MissingDataProviderArgumentException",
+					message="You must specify a  <cfargument...> when using the dataprovider annotation in your test.",
+					detail="Usage: <cffunction mxunit:dataprovider ...> <cfargument name=""queryName"" />");
+		}
 
-	<cffunction name="_$snif" access="private" hint="Door into another component's variables scope">
-		<cfreturn variables />
-	</cffunction>
+       queryName = getMetaData(method).parameters[1].name;
+       args[queryName] = arguments.query;
+       _$invoke(arguments.objectUnderTest,arguments.methodName,args);
+	  </cfscript>
+   </cffunction>
 
-	<cffunction name="dump" access="private">
-		<cfargument name="o">
-		<cfdump var="#o#">
-	</cffunction>
+
+    <cffunction name="_$snif" access="private" hint="Door into another component's variables scope">
+      <cfreturn variables />
+    </cffunction>
+
+   <cffunction name="dump" access="private">
+     <cfargument name="o">
+     <cfdump var="#o#">
+   </cffunction>
 
    <cffunction name="_$throw">
     <cfargument name="type" required="false" default="mxunit.exception.InvalidDataProviderReferenceException">

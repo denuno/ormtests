@@ -7,9 +7,7 @@
      ================================= -->
     
    <property name="mxunit.jar" value="../ant/lib/mxunit-ant.jar" />
-   <property name="server.name" value="dev" />
-   <property name="server.port" value="80" />
-	<property name="component.path" value="/home/billy/webapps" />
+   <property file="build.properties" />
 
 	
 	<target name="main">
@@ -26,12 +24,8 @@
 	                   verbose="true"
 	                   haltonfailure="false"
 	                   haltonerror="false">
-	       	
-	        <directory path="${component.path}/mxunit/tests/runner"
-	       	           componentPath="mxunit.tests.runner"
-	       	           recurse="false"
-	       	            />
 	   	    
+	       
 	       	<directory   path="${component.path}/mxunit/tests/framework"
 	                     packageName="mxunit.tests.framework"
 	                     componentPath="mxunit.tests.framework"
@@ -63,16 +57,18 @@
 	                   recurse="false"
 	                   includes="*.cfc"
 	                   excludes="" />
-	       	<!--Need to regenerate tests  	       	
-	    
-	         <directory runner="/mxunit/runner/HttpAntRunner.cfc"
-	                    remoteMethod="run"
-	                    path="${component.path}/mxunit/tests/generator"
-	                    packageName="mxunit.tests.generator"
-	                  componentPath="mxunit.tests.generator"
-	                    recurse="false"
-	                    excludes="" />
-	        -->
+	       	       	
+	       	
+	       	<directory runner="/mxunit/runner/HttpAntRunner.cfc"
+	                   remoteMethod="run"
+	                   path="${component.path}/mxunit/tests/mightymock"
+	                   packageName="mxunit.tests.mightymock"
+	                   componentPath="mxunit.tests.mightymock"
+	                   recurse="false"
+	                   includes="*.cfc"
+	                   excludes="" />
+	       	
+	       	
 	      </mxunittask>
 
 	  </target>

@@ -6,26 +6,27 @@
 	<cffunction name="run" access="remote" output="true">
 		<cfargument name="test" type="string" required="true" hint="TestCase,TestSuite, or Dircetory to run" />
 		<cfargument name="componentPath" type="string" required="false" default="" hint="A dotted prefix mapping for the directory; e.g., com.foo.bar" />
-		<cfargument name="output" required="false"  default="extjs" hint="The type of output format" />
 		
-		<cfset var dirrunner = "" />
-		<cfset var localTest = "" />
-		<cfset var results = "" />
-		
-		<cfif refind("[\\/]+", arguments.test)>
-			<cfscript>
+		<cfscript>
+			var dirrunner = "";
+			var results = "";
+			
+			if (refind("[\\/]+", arguments.test)) {
 				if( arguments.componentPath is ""){
 					writeoutput("WARNING: Please supply componentPath when running a directory of tests");
 					return;
 				}
 				
 				dirrunner = createObject("component","DirectoryTestSuite");
-				results = dirrunner.run(test, componentPath, false);
-				writeoutput(results.getResultsOutput(arguments.output));
-			</cfscript>
-		<cfelse>
-			<cfset localTest = createObject("component", arguments.test) />
-			<cfset localTest.runTestRemote(output = arguments.output) />
-		</cfif>
+				
+				results = dirrunner.run(test,componentPath,false);
+				
+				writeoutput(results.getResultsOutput("rawhtml"));
+			} else {
+				localTest = createObject("component", arguments.test);
+				
+				localTest.runTestRemote(output="rawhtml");
+			}
+		</cfscript>
 	</cffunction>
 </cfcomponent>

@@ -1,7 +1,7 @@
 
 <!--------------------------------------------------------------------
 Original QuerySim.cfm by hal.helms@TeamAllaire.com
-Update by bill s. - 04.09.2009
+Update by bill s. - 04.09.2010
 
 This will only work in ColdFusion 8 and later due to conditional
 syntax usage - && in lieu of AND, and i++, etc.
@@ -16,21 +16,21 @@ reading querysim info from a profile file; ie, .ini. This was omitted
 because 'i' don't use that.
 --------------------------------------------------------------------->
 
-<cfsetting enablecfoutputonly="yes">
+<cfsetting enablecfoutputonly="false">
 <cfscript>
- localvars.queryName = '';
- localvars.raw = '';
- localvars.q = chr(0);
+ _local.queryName = '';
+ _local.raw = '';
+ _local.q = chr(0);
 
  if (thistag.HasEndTag and thistag.ExecutionMode is 'start'){
 	//no worries
  }
 
  else if (thistag.HasEndTag and thistag.ExecutionMode is 'end'){
-   localvars.raw = trim( Thistag.generatedContent );
-	// thistag.generatedContent = '';
-   localvars.q = parse(localvars.raw);
-   setVariable( 'caller.' & localvars.queryName, localvars.q );
+   _local.raw = trim( Thistag.generatedContent );
+	 thistag.generatedContent = '';
+   _local.q = parse(_local.raw);
+   setVariable( 'caller.' & _local.queryName, _local.q );
  }
 
 
@@ -47,20 +47,20 @@ function parse(input){
    var row = '';
 
   for(i; i <=  arrayLen(lines); i ++ ){
-     line = lines[i];
+     line = trim(lines[i]);
 
      //to do: simply ignore blank lines or lines with only whitespace.
      //if ( refind ( line, '^[[:space:]]*$' ) ) continue;
 
      if(line != '' && queryName == '') {
-         queryName = lines[i];
+         queryName = line;
          setQueryName(queryName);
          columnListLine = i+1;
          continue;
      }
 
      if(i == columnListLine) {
-       columnList = lines[i];
+       columnList = line;
        q = queryNew(columnList);
        continue;
      }
@@ -81,7 +81,7 @@ function parse(input){
 
 
   function setQueryName(qName){
-    localvars.queryName = qName;
+    _local.queryName = qName;
   }
 
 </cfscript>
